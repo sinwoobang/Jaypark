@@ -4,4 +4,5 @@ from django.shortcuts import render
 
 
 def feed(request):
-    return render(request, 'feed/index.html')
+    ct = {'user': request.user}
+    return render(request, 'feed/index.html', ct)

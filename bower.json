@@ -1,0 +1,21 @@
+{
+  "name": "jaypark",
+  "homepage": "https://github.com/sinwoobang/jaypark",
+  "authors": [
+    "sinwoobang <sinwoobang@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^4.3.1"
+  }
+}

@@ -301,4 +301,10 @@ fabric.properties
 
 .idea/
 
-# End of https://www.gitignore.io/api/macos,python,pycharm,django
+### Bower ###
+bower_components
+.bower-cache
+.bower-registry
+.bower-tmp
+
+# End

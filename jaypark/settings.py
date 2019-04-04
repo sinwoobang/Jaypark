@@ -124,3 +124,27 @@ STATIC_URL = '/static/'
 # Accounts/Auth
 LOGIN_REDIRECT_URL = '/feed/'
 LOGOUT_REDIRECT_URL = '/feed/'
+
+# LOGGING
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'filters': ['require_debug_true']
+        },
+    },
+    'loggers': {
+        'debugging': {
+            'handlers': ['console'],
+            'level': 'DEBUG'
+        }
+    },
+}

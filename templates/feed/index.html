@@ -1,17 +1,63 @@
+{% load staticfiles %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-    <meta charset="UTF-8">
+    <meta charset='UTF-8'>
     <title>Feed</title>
+    <link rel='stylesheet' href='{% static 'bootstrap/dist/css/bootstrap.min.css' %}'>
+    <script type='text/javascript' src='{% static 'jquery/dist/jquery.min.js' %}'></script>
+    <script type='text/javascript' src='{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}'></script>
 </head>
 <body>
     Hello World!
 
     {% if user.is_authenticated %}
         {{ user.username }}
-        <a href="{% url "logout" %}">Logout</a>
+        <a href='{% url 'logout' %}'>Logout</a>
     {% else %}
-        <a href="{% url "login" %}">Login</a>
+        <a href='{% url 'login' %}'>Login</a>
     {% endif %}
+
+    <div class='form-group'>
+        <label for='textPost'></label>
+        <textarea class='form-control' id='textPost' placeholder="Let's tweet!"></textarea>
+        <button class='btn btn-primary' type='button' id='btnPost'>Tweet</button>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+          $('#btnPost').click(function() {
+            var text = $('#textPost').val();
+            var postData = {
+              text: text
+            };
+            sendPostRequestWithJson('{% url 'post.api.write' %}', postData, function(res) {
+              if (res.status === 'success') {
+                alert('Success.');
+                document.location.reload();
+              } else {
+                alert('Failed.');
+              }
+            });
+          })
+        });
+
+        function sendPostRequestWithJson(url, data, cb) {
+          // To send a post request with JSON and adding CSRF TOKEN to Header.
+          $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: 'json',
+            beforeSend: function(request) {
+              request.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            },
+            success: function(res) {
+              cb(res);
+            }
+          })
+        }
+    </script>
 </body>
 </html>

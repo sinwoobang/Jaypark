@@ -1,5 +1,5 @@
 # jaypark
-A project for [Spirent Communications](https://www.spirent.com/).
+Twitter-like service powered by Django
 
 ### What does jaypark mean?
 [Jay Park](https://rocnation.com/jay-park/) is the first Asian singer to sign with [Roc Nation](https://rocnation.com/).

@@ -18,6 +18,11 @@
         <a href='{% url 'login' %}'>Login</a>
     {% endif %}
 
+    <div>
+        <label for="username">Follow : </label>
+        <input type="text" id="textUsernameToFollow" name="username" />
+        <button class="btn btn-primary" type="button" id="btnFollow">Follow</button>
+    </div>
     <div class='form-group'>
         <label for='textPost'></label>
         <textarea class='form-control' id='textPost' placeholder="Let's tweet!"></textarea>
@@ -39,7 +44,23 @@
                 alert('Failed.');
               }
             });
-          })
+          });
+
+          $('#btnFollow').click(function() {
+            var username = $('#textUsernameToFollow').val();
+            var postData = {
+                key: 'username',
+                username: username
+            };
+            sendPostRequestWithJson('{% url 'account.api.follow' %}', postData, function(res) {
+              if (res.status === 'success') {
+                alert('Success.');
+                document.location.reload();
+                } else {
+                    alert(res.status_message);
+                }
+            });
+        })
         });
 
         function sendPostRequestWithJson(url, data, cb) {

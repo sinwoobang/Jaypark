@@ -1,6 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm as BuiltInUserCreationForm, UsernameField
 from django.forms import EmailField
 
+from accounts.models import User
+
 
 class UserCreationForm(BuiltInUserCreationForm):
     """
@@ -10,6 +12,7 @@ class UserCreationForm(BuiltInUserCreationForm):
     email = EmailField(required=True, label='Email')
 
     class Meta(BuiltInUserCreationForm.Meta):
+        model = User
         fields = ('username', 'email')
         field_classes = {
             'username': UsernameField,

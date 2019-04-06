@@ -130,6 +130,7 @@ STATICFILES_DIRS = [
 # Accounts/Auth
 LOGIN_REDIRECT_URL = '/feed/'
 LOGOUT_REDIRECT_URL = '/feed/'
+MAIN_REDIRECT_URL = '/feed/'
 
 # LOGGING
 LOGGING = {

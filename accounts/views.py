@@ -5,7 +5,6 @@ from django.contrib.auth import logout, login, authenticate
 from django.db import transaction
 from django.shortcuts import render, redirect
 from accounts.forms import UserCreationForm
-from accounts.graphs import User as UserNode
 
 
 logger = logging.getLogger('debugging')
@@ -35,7 +34,7 @@ def register(request):
             login(request, user)
 
             try:
-                UserNode(username=username).save()
+                user.create_node()
             except Exception as e:
                 logger.error('FAIL TO CREATE A USER NODE FOR {u}, {e}'.format(u=username, e=e))
             return redirect(settings.LOGIN_REDIRECT_URL)

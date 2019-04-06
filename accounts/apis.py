@@ -65,7 +65,7 @@ def follow(request):
 
     try:
         target_user = User.objects.get(**user_filter)
-        target_user_node = UserNode.nodes.get(username=target_user.username)
+        target_user_node = target_user.get_or_create_node()
     except User.DoesNotExist:
         return JsonResponse({
             'status': 'error',

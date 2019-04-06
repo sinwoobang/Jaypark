@@ -3,8 +3,6 @@ import logging
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from accounts.graphs import User as UserNode
-
 
 logger = logging.getLogger('debugging')
 
@@ -12,8 +10,7 @@ logger = logging.getLogger('debugging')
 @login_required
 def feed(request):
     user = request.user
-
-    user_node = UserNode.nodes.get(username=user.username)
+    user_node = user.get_or_create_node()
     followings_nodes = user_node.following.all()
     followeds_nodes = user_node.followed.all()
 

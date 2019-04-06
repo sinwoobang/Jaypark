@@ -11,8 +11,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from neomodel import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -82,6 +84,9 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# Graph
+config.DATABASE_URL = 'bolt://jaypark:jay@graph@localhost:7687'  # default
 
 
 # Password validation

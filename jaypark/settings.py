@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'feed',
     'accounts',
-    'post'
+    'post',
+    'common'
 ]
 
 MIDDLEWARE = [
@@ -87,6 +88,8 @@ DATABASES = {
 
 # Graph
 config.DATABASE_URL = 'bolt://jaypark:jay@graph@localhost:7687'  # default
+if DEBUG:
+    os.environ['NEOMODEL_CYPHER_DEBUG'] = '1'
 
 
 # Password validation
@@ -160,3 +163,5 @@ LOGGING = {
         }
     },
 }
+
+AUTH_USER_MODEL = 'accounts.User'

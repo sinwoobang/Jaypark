@@ -4,11 +4,14 @@ language: python
 cache: pip
 python:
 - '3.7'
+services:
+- neo4j
 before_install:
 - npm install -g bower
+- bower install
+- sudo sed -i 's|dbms.security.auth_enabled=false|dbms.security.auth_enabled=true|g' /etc/neo4j/neo4j.conf
 install:
 - pip install -r requirements/dev.txt
-- bower install
 before_script:
 - python manage.py collectstatic
 script:

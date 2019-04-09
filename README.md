@@ -1,4 +1,4 @@
-# jaypark
+# jaypark [![Build Status](https://travis-ci.com/sinwoobang/jaypark.svg?token=s64m3rayQnZ6TWPqxtrG&branch=master)](https://travis-ci.com/sinwoobang/jaypark)
 Twitter-like service powered by Django
 
 ### What does jaypark mean?

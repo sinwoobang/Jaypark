@@ -4,13 +4,19 @@ language: python
 cache: pip
 python:
 - '3.7'
-services:
-- neo4j
+jdk:
+- oraclejdk8
 before_install:
 - npm install -g bower
 - bower install
+- >
+  wget -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
+  echo 'deb https://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list.d/neo4j.list
+- sudo apt-get update
+- sudo apt-get install neo4j=1:3.5.3
+- sudo systemctl enable neo4j
 - sudo sed -i 's|dbms.security.auth_enabled=false|dbms.security.auth_enabled=true|g' /etc/neo4j/neo4j.conf
-- sudo service neo4j start
+- sudo systemctl start neo4j
 install:
 - pip install -r requirements/dev.txt
 before_script:

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import sys
+
 from neomodel import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -26,6 +28,7 @@ SECRET_KEY = '3liy0^&fcl-(b%_l%h=)$o0)4(8lwqiy=5*3@r+$5!oyt$e4js'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 ALLOWED_HOSTS = []
 
@@ -90,6 +93,8 @@ DATABASES = {
 config.DATABASE_URL = 'bolt://jaypark:jay@graph@localhost:7687'  # default
 if DEBUG:
     os.environ['NEOMODEL_CYPHER_DEBUG'] = '1'
+if TESTING:
+    config.DATABASE_URL = 'bolt://jayparktest:jay@graphtest@localhost:7687'  # default
 
 
 # Password validation

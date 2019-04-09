@@ -7,8 +7,8 @@ before_install:
 - npm install -g bower
 install:
 - pip install -r requirements/dev.txt
-before_script:
 - bower install
+before_script:
 - python manage.py collectstatic
 script:
 - python manage.py test

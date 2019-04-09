@@ -15,7 +15,7 @@ class User(AbstractUser):
     def get_node_or_none(self):
         """Get a node in Graph"""
         from accounts.graphs import User as UserNode
-        return UserNode.nodes.first(pk=self.id)
+        return UserNode.nodes.get_or_none(pk=self.id)
 
     def get_or_create_node(self):
         """Get a node but if it doesn't exist, create a node"""

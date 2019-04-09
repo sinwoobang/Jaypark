@@ -14,8 +14,10 @@ before_install:
 - sudo apt-get update
 - sudo apt-get install neo4j=1:3.5.3
 - sudo systemctl enable neo4j
-- sudo sed -i 's|dbms.security.auth_enabled=false|dbms.security.auth_enabled=true|g' /etc/neo4j/neo4j.conf
 - sudo systemctl start neo4j
+- sleep 5
+- neo4j-admin set-initial-password neo4j
+- sleep 1
 install:
 - pip install -r requirements/dev.txt
 before_script:

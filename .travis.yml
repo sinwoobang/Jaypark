@@ -15,12 +15,22 @@ before_install:
 - sudo apt-get install neo4j=1:3.5.3
 - sudo systemctl enable neo4j
 - sudo systemctl start neo4j
-- sleep 8
+- sleep 5
 - sudo neo4j-admin set-initial-password neo4j
-- sleep 1
+- sleep 2
+- cypher-shell -u neo4j -p neo4j --non-interactive "CALL dbms.security.changePassword('neo4jfirstlogin')"
+- sleep 2
+- >
+  cypher-shell -u neo4j -p neo4jfirstlogin --non-interactive "CALL dbms.security.createUser(\"${TEST_GRAPH_USERNAME}\", \"${TEST_GRAPH_PASSWORD}\", false)"
+- sleep 2
 install:
 - pip install -r requirements/dev.txt
 before_script:
 - python manage.py collectstatic
 script:
 - python manage.py test
+env:
+  global:
+  - secure: FzP/C6c5qaswjJqzPpAacGfN42BhW72y4L9sNHZWWgy193OWm9PCOFfxbWzrqV/nEuIg28FVoiWTUtSqgZ4luY6DasWh1WQa2ZGEJcUn1Kd+nNswA3LPcIFWxx27tEkOn8jo/na4Xa7UmqzUi8HWp9n3d7fFpCjfnDWGgH4neLIpkyjUb0d8TG2OA5THffARqRzHU6jqLbnFCLv4wGn2OLRm4BRc7AuR1eW35rQhOYvdVEBORpMRatpYyTfYJKMmkstc+SJe/8OcxMttLVH1CS0FyWiP7Dfkpu+lFbmmxUgVMSnmvH4cDAYClwXjdPR56cuH19+5XsIP9bYDDNhhLWVEDZbdTH12RXSr59OVf/fYhOlqkGnMi7u0gV8tCQQpGVDpRVvK15VlzaaGvNYR+AifdWpdIvzc/vb6njS5qvIjs/pYzGAaWbAv8/8+2NT+Cf2Bi84EWjLFFcOIj7pFd4XINRJtvfruW9BKqjZkIEpnk+n612ezgAjFdedRxhxFwnPOTkRCRxxYYV3/6zgE4+KVO/2afxbLTzph5TM5OEfmoJYHcBb9cCoONkXAEStG04nSrV38KzhIdrRgg/doQdXwPAcF+sIq6RytYFT3etcyCIaSNcDGd/XVQq28Jq5iZBu0KUOiFr00x93+9Ku+A5d/d8wtpaPJubSgiv/FiNI=
+  - secure: Dy72bgIWVRoie5Omj+/K5+lJkWXYqrGv6B6SG48SCgIirOGjNnMkHa2nTn9M2ZEBSq4e4RBX8RHdqq/t3RoETDnGrLUe4lJ5ls2POkhbuHNKPGQ2Qyx7kGjlcO2bfSanlBGVoxwGTWjl+zjeIW/ZXIpev3T9mVZfHi3zuZeOBDiS5PIOxpEpKY6S9kpHMx+gHVYzUggmrwwVZj3yOA1nqMl7TqZ5gc82i7WnZMrqdcfLwzKLCZoveYbWBkBTBqVb5mLP/LqVaajqL0cRp1nVcQyQvJJG+AHQ4jRGnbRQPyEbCuMPvnmC8NxM85ObyE3wEuDEnqUkess+DLiQwrwInRbanLvPbwYbpNh94KuJP3K4sG9Kw7wjLP5jh0EZBpCwmdQDjw3q8zcM6nSAGhhBHjcZY0EcM7vcUCVdUwr24sAaiM1plG3zEOEXJMFQx1HbpREv1MX7o4H77I71g/A+Cg5wckkJfcEdOX1xI3nHmk2JyJJRL9L/qHVYmPWi4S1dLtjxrQkdH2Hsi/u912jQ+/jCMOIROW9c6q7k+frxcICAxnRTmJIYfPNMeDwv/QJ8qoGu9s7pbnrl3uz5DtGMHZQhfHCGj16xwuz1GD2rDcJWqi9IkxY7MCJdnXTw4N7PCQIscX9MnXiBVhdgtvfqjx9m4I9nPhQ11M1NlGUc3tY=
+  - secure: o8vYwFsAyF/kQ0M5iuKJ63TM21j7Fe5tbyyC4y2JyCKWWmfxHhdtrQpnisBfRpl96YjRQd1enRno03we38WgcFD17kK7NuJpyAVfSFi2ZTV6A044k/9MDdjJqBUPT0xtkBKF7WWLQveuND1Mq2t0t+2PMM3QO+dIQqFSoKbgFvQ9p+baZDLY/O+BNXW1nMrjiR7YhanF4bxlBn+JpAYQGYBD3fCI+SD9Qw5q/0kxgRb5zKXkLk2kX+qCxyya5C6M8qNf6f1612yCk2D+agPiDTsUX8EVM9FqwzP+LJomM8ayUZdbcZ+0P/EWraRN5ariCSwm3YhOokPEWZhRRCCZNlMSQhy/hrcMX0ZTGsyA19sCLwpT8Oeet/xCq558J5kKDQmLcQhuoeR19hXqDWkyj6u/ajER79bF6vSaj/ia5UlAu0lwNfC9xmTFfRVB8tR/C9j2hVCgbEUfHM+4QiFe/KlwGFehRdJya9Pm5skOm6S34YDxV/OkTzFzcZL2JaRpqW36Udxq2wkrI+C7xtGk2wQdKNAhWNFriZGnNo2KJ/9osfx1EErahTOkvutWoyIkc57trspfbZWG0Zzt935AlxuB+sbw3RJa+pxfCjUuNt+DcyVmYvkuSUlzm4g61l0Zz8Q9T6o5X4j973cuCGzyu3afMB+5Xlwv5kZkA92HwIw=

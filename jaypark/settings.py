@@ -93,8 +93,8 @@ DATABASES = {
 config.DATABASE_URL = 'bolt://jaypark:jay@graph@localhost:7687'  # default
 if DEBUG:
     os.environ['NEOMODEL_CYPHER_DEBUG'] = '1'
-if TESTING:
-    config.DATABASE_URL = 'bolt://neo4j:neo4j@localhost:7687'  # default
+if TESTING:  # for CI or Test
+    config.DATABASE_URL = 'bolt://jayparktest:jay@graphtest@localhost:7687'
 
 
 # Password validation

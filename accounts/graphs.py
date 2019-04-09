@@ -1,7 +1,12 @@
 from neomodel import (
     StructuredNode, RelationshipFrom, RelationshipTo, StringProperty,
-    IntegerProperty
+    IntegerProperty, DateTimeProperty, StructuredRel, UniqueIdProperty
 )
+
+
+class UserWritesTweetRel(StructuredRel):
+    """Relationship when User tweets."""
+    created_at = DateTimeProperty(default_now=True)
 
 
 class User(StructuredNode):
@@ -11,6 +16,8 @@ class User(StructuredNode):
 
     following = RelationshipTo('User', 'FOLLOWING')
     followed = RelationshipFrom('User', 'FOLLOWED')
+
+    written_tweets = RelationshipTo('Tweet', 'WRITES_TWEET')
 
     def get_db_object(self):
         """Get a object in DB"""
@@ -22,3 +29,10 @@ class User(StructuredNode):
         user = self.get_db_object()
         self.username = user.username
         self.save()
+
+
+class Tweet(StructuredNode):
+    """Node Tweet"""
+    pk = UniqueIdProperty()
+    text = StringProperty(required=True)
+    user = RelationshipFrom('User', 'WRITES_TWEET', model=UserWritesTweetRel)

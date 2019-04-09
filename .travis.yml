@@ -9,7 +9,6 @@ services:
 before_install:
 - npm install -g bower
 - bower install
-- sudo service neo4j stop
 - sudo sed -i 's|dbms.security.auth_enabled=false|dbms.security.auth_enabled=true|g' /etc/neo4j/neo4j.conf
 - sudo service neo4j start
 install:

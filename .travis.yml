@@ -23,12 +23,14 @@ before_install:
 - >
   cypher-shell -u neo4j -p neo4jfirstlogin --non-interactive "CALL dbms.security.createUser(\"${TEST_GRAPH_USERNAME}\", \"${TEST_GRAPH_PASSWORD}\", false)"
 - sleep 2
+- sudo apt-get install python3-dev gcc  # to make Coverage Computing fast by using C Extension
 install:
 - pip install -r requirements/dev.txt
 before_script:
 - python manage.py collectstatic
 script:
-- python manage.py test
+- coverage run --source='.' manage.py test  # to test codes
+- coverage report  # to measure Test Coverage
 env:
   global:
   - secure: FzP/C6c5qaswjJqzPpAacGfN42BhW72y4L9sNHZWWgy193OWm9PCOFfxbWzrqV/nEuIg28FVoiWTUtSqgZ4luY6DasWh1WQa2ZGEJcUn1Kd+nNswA3LPcIFWxx27tEkOn8jo/na4Xa7UmqzUi8HWp9n3d7fFpCjfnDWGgH4neLIpkyjUb0d8TG2OA5THffARqRzHU6jqLbnFCLv4wGn2OLRm4BRc7AuR1eW35rQhOYvdVEBORpMRatpYyTfYJKMmkstc+SJe/8OcxMttLVH1CS0FyWiP7Dfkpu+lFbmmxUgVMSnmvH4cDAYClwXjdPR56cuH19+5XsIP9bYDDNhhLWVEDZbdTH12RXSr59OVf/fYhOlqkGnMi7u0gV8tCQQpGVDpRVvK15VlzaaGvNYR+AifdWpdIvzc/vb6njS5qvIjs/pYzGAaWbAv8/8+2NT+Cf2Bi84EWjLFFcOIj7pFd4XINRJtvfruW9BKqjZkIEpnk+n612ezgAjFdedRxhxFwnPOTkRCRxxYYV3/6zgE4+KVO/2afxbLTzph5TM5OEfmoJYHcBb9cCoONkXAEStG04nSrV38KzhIdrRgg/doQdXwPAcF+sIq6RytYFT3etcyCIaSNcDGd/XVQq28Jq5iZBu0KUOiFr00x93+9Ku+A5d/d8wtpaPJubSgiv/FiNI=

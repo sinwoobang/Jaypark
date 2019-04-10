@@ -7,3 +7,4 @@ neotime==1.7.4
 pytz==2018.9
 six==1.12.0
 sqlparse==0.3.0
+coverage==4.5.3

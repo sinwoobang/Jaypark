@@ -1,0 +1,29 @@
+[run]
+branch = True
+omit =
+    # Django Migration Files
+    */migrations/*
+
+    # Static files
+    static/*
+
+    # Template files
+    templates/*
+
+    # Virtualenv files
+    venv/*
+
+    # URL Patterns
+    */urls.py
+
+    # Built-in WSGI
+    */wsgi.py
+
+[report]
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    # Have to re-enable the standard pragma
+    pragma: no cover
+
+    # Don't complain about missing debug-only code:
+    def __repr__

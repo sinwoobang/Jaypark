@@ -18,12 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
 
-
 urlpatterns = [
     path('', RedirectView.as_view(url=settings.MAIN_REDIRECT_URL)),  # To redirect to the main feed
-    path('<username>/', RedirectView.as_view(pattern_name='feed_user')),  # To redirect to a user's feed
     path('admin/', admin.site.urls),
     path('feed/', include('feed.urls')),
     path('accounts/', include('accounts.urls')),
     path('post/', include('post.urls')),
+    path('<username>/', RedirectView.as_view(pattern_name='feed_user')),  # To redirect to a user's feed. Keep it as the last view to prevent to conflict with the other views.
 ]

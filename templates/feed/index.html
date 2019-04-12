@@ -1,23 +1,8 @@
+{% extends "feed/base.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-    <meta charset='UTF-8'>
-    <title>Feed</title>
-    <link rel='stylesheet' href='{% static 'bootstrap/dist/css/bootstrap.min.css' %}'>
-    <script type='text/javascript' src='{% static 'jquery/dist/jquery.min.js' %}'></script>
-    <script type='text/javascript' src='{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}'></script>
-</head>
-<body>
-    Hello World!
-
-    {% if user.is_authenticated %}
-        {{ user.username }}
-        <a href='{% url 'logout' %}'>Logout</a>
-    {% else %}
-        <a href='{% url 'login' %}'>Login</a>
-    {% endif %}
-
+{% load common_filters %}
+{% block content %}
+<div>
     <div>
         <label for="username">Follow : </label>
         <input type="text" id="textUsernameToFollow" name="username" />
@@ -28,57 +13,39 @@
         <textarea class='form-control' id='textPost' placeholder="Let's tweet!"></textarea>
         <button class='btn btn-primary' type='button' id='btnPost'>Tweet</button>
     </div>
-
-    <script>
-        $(document).ready(function() {
-          $('#btnPost').click(function() {
-            var text = $('#textPost').val();
-            var postData = {
-              text: text
-            };
-            sendPostRequestWithJson('{% url 'post.api.write' %}', postData, function(res) {
-              if (res.status === 'success') {
-                alert('Success.');
-                document.location.reload();
-              } else {
-                alert('Failed.');
-              }
-            });
-          });
-
-          $('#btnFollow').click(function() {
-            var username = $('#textUsernameToFollow').val();
-            var postData = {
-                key: 'username',
-                username: username
-            };
-            sendPostRequestWithJson('{% url 'account.api.follow' %}', postData, function(res) {
-              if (res.status === 'success') {
-                alert('Success.');
-                document.location.reload();
-                } else {
-                    alert(res.status_message);
-                }
-            });
-        })
+</div>
+<script>
+    $(document).ready(function() {
+      $('#btnPost').click(function() {
+        var text = $('#textPost').val();
+        var postData = {
+          text: text
+        };
+        sendPostRequestWithJson('{% url 'post.api.write' %}', postData, function(res) {
+          if (res.status === 'success') {
+            alert('Success.');
+            document.location.reload();
+          } else {
+            alert('Failed.');
+          }
         });
+      });
 
-        function sendPostRequestWithJson(url, data, cb) {
-          // To send a post request with JSON and adding CSRF TOKEN to Header.
-          $.ajax({
-            url: url,
-            type: 'POST',
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            dataType: 'json',
-            beforeSend: function(request) {
-              request.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-            },
-            success: function(res) {
-              cb(res);
+      $('#btnFollow').click(function() {
+        var username = $('#textUsernameToFollow').val();
+        var postData = {
+            key: 'username',
+            username: username
+        };
+        sendPostRequestWithJson('{% url 'account.api.follow' %}', postData, function(res) {
+          if (res.status === 'success') {
+            alert('Success.');
+            document.location.reload();
+            } else {
+                alert(res.status_message);
             }
-          })
-        }
-    </script>
-</body>
-</html>
+        });
+    })
+    });
+</script>
+{% endblock %}

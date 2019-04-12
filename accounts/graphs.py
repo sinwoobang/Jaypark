@@ -9,13 +9,18 @@ class UserWritesTweetRel(StructuredRel):
     created_at = DateTimeProperty(default_now=True)
 
 
+class UserFollows(StructuredRel):
+    """Relationship when User follows someone."""
+    created_at = DateTimeProperty(default_now=True)
+
+
 class User(StructuredNode):
     """Node User"""
     pk = IntegerProperty(unique_index=True, required=True)
     username = StringProperty(unique_index=True, required=True)
 
-    following = RelationshipTo('User', 'FOLLOWING')
-    followed = RelationshipFrom('User', 'FOLLOWED')
+    following = RelationshipTo('User', 'FOLLOWS')
+    followed = RelationshipFrom('User', 'FOLLOWS', model=UserFollows)
 
     written_tweets = RelationshipTo('Tweet', 'WRITES_TWEET')
 

@@ -13,6 +13,19 @@
         <textarea class='form-control' id='text-post' placeholder="Let's tweet!"></textarea>
         <button class='btn btn-primary' type='button' id='btn-post'>Tweet</button>
     </div>
+    <hr>
+    <h3>Tweets</h3>
+    <hr>
+    <div>
+        {% for tweet in feed_tweets %}
+            <div id="tweet-{{ tweet.tweet_id }}" class="tweet">
+                <p>{{ tweet.text }}<p>
+                <span>Tweet By <span><a href="{{ tweet.username|username2url }}">{{ tweet.username }}</a></span></span>
+                <span>{{ tweet.created_at|timestamp2datetime }}</span>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
 </div>
 <script>
     $(document).ready(function() {

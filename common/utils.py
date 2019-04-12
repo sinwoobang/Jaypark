@@ -33,3 +33,8 @@ def timestamp2datetime(timestamp):
     :rtype: datetime.datetime
     """
     return datetime.utcfromtimestamp(timestamp // 1000)
+
+
+def username2url(username):
+    """Return a url which redirects to a users' feed."""
+    return f'https://jaypark.sinwoobang.me/{username}'

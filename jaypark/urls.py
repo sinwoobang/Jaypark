@@ -20,7 +20,8 @@ from django.views.generic.base import RedirectView
 
 
 urlpatterns = [
-    path('', RedirectView.as_view(url=settings.MAIN_REDIRECT_URL)),
+    path('', RedirectView.as_view(url=settings.MAIN_REDIRECT_URL)),  # To redirect to the main feed
+    path('<username>/', RedirectView.as_view(pattern_name='feed_user')),  # To redirect to a user's feed
     path('admin/', admin.site.urls),
     path('feed/', include('feed.urls')),
     path('accounts/', include('accounts.urls')),

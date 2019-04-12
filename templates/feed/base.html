@@ -1,0 +1,46 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feed</title>
+    <link rel='stylesheet' href='{% static 'bootstrap/dist/css/bootstrap.min.css' %}'>
+    <script type='text/javascript' src='{% static 'jquery/dist/jquery.min.js' %}'></script>
+    <script type='text/javascript' src='{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}'></script>
+    <script type="text/javascript">
+      function sendPostRequestWithJson(url, data, cb) {
+        // To send a post request with JSON and adding CSRF TOKEN to Header.
+        $.ajax({
+          url: url,
+          type: 'POST',
+          data: JSON.stringify(data),
+          contentType: 'application/json',
+          dataType: 'json',
+          beforeSend: function(request) {
+            request.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+          },
+          success: function(res) {
+            cb(res);
+          }
+        })
+      }
+    </script>
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+<div>
+Auth :
+{% if user.is_authenticated %}
+    You are logged in as {{ user.username }}.
+    <a href='{% url 'logout' %}'>Logout</a>
+{% else %}
+    <a href='{% url 'login' %}'>Login</a>
+{% endif %}
+<hr>
+</div>
+{% block content %}
+{% endblock %}
+</body>
+</html>

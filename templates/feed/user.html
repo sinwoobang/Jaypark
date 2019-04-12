@@ -1,0 +1,22 @@
+{% extends "feed/base.html" %}
+{% load common_filters %}
+{% block content %}
+<div>
+    <h4>Welcome to {{ target_user.username }}'s feed</h4>
+    <div>
+        <span>Tweets</span>
+        {% for tweet in tweets %}
+            <div id="tweet-{{ tweet.pk }}" class="tweet">
+                <span>Text : </span>
+                <p>{{ tweet.text }}<p>
+                <span>{{ tweet.created_at|timestamp2datetime }}</span>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+
+    });
+</script>
+{% endblock %}

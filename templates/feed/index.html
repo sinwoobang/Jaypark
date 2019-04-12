@@ -4,20 +4,20 @@
 {% block content %}
 <div>
     <div>
-        <label for="username">Follow : </label>
-        <input type="text" id="textUsernameToFollow" name="username" />
-        <button class="btn btn-primary" type="button" id="btnFollow">Follow</button>
+        <label for="text-username-to-follow">Follow : </label>
+        <input type="text" id="text-username-to-follow" name="username" />
+        <button class="btn btn-primary" type="button" id="btn-follow">Follow</button>
     </div>
     <div class='form-group'>
-        <label for='textPost'></label>
-        <textarea class='form-control' id='textPost' placeholder="Let's tweet!"></textarea>
-        <button class='btn btn-primary' type='button' id='btnPost'>Tweet</button>
+        <label for='text-post'></label>
+        <textarea class='form-control' id='text-post' placeholder="Let's tweet!"></textarea>
+        <button class='btn btn-primary' type='button' id='btn-post'>Tweet</button>
     </div>
 </div>
 <script>
     $(document).ready(function() {
-      $('#btnPost').click(function() {
-        var text = $('#textPost').val();
+      $('#btn-post').click(function() {
+        var text = $('#text-post').val();
         var postData = {
           text: text
         };
@@ -31,8 +31,8 @@
         });
       });
 
-      $('#btnFollow').click(function() {
-        var username = $('#textUsernameToFollow').val();
+      $('#btn-follow').click(function() {
+        var username = $('#text-username-to-follow').val();
         var postData = {
             key: 'username',
             username: username

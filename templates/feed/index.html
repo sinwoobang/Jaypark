@@ -22,6 +22,11 @@
                 <p>{{ tweet.text }}<p>
                 <span>Tweet By <span><a href="{{ tweet.username|username2url }}">{{ tweet.username }}</a></span></span>
                 <span>{{ tweet.created_at|timestamp2datetime }}</span>
+                {% if not tweet.is_liked %}
+                    <button class="btn btn-primary tweet--btn-like" data-tweet-id="{{ tweet.tweet_id }}">Like</button>
+                {% else %}
+                    <button class="btn btn-primary tweet--btn-unlike disabled" data-tweet-id="{{ tweet.tweet_id }}">UnLike</button>
+                {% endif %}
             </div>
             <hr>
         {% endfor %}
@@ -58,7 +63,37 @@
                 alert(res.status_message);
             }
         });
-    })
+      });
+
+      $('.tweet--btn-like').click(function() {
+        var tweetId = $(this).data('tweet-id');
+        var postData = {
+            tweet_id: tweetId
+        };
+        sendPostRequestWithJson('{% url 'post.api.like' %}', postData, function(res) {
+          if (res.status === 'success') {
+            alert('Success.');
+            document.location.reload();
+            } else {
+                alert(res.status_message);
+            }
+        });
+      });
+
+      $('.tweet--btn-unlike').click(function() {
+        var tweetId = $(this).data('tweet-id');
+        var postData = {
+            tweet_id: tweetId
+        };
+        sendPostRequestWithJson('{% url 'post.api.unlike' %}', postData, function(res) {
+          if (res.status === 'success') {
+            alert('Success.');
+            document.location.reload();
+            } else {
+                alert(res.status_message);
+            }
+        });
+      })
     });
 </script>
 {% endblock %}

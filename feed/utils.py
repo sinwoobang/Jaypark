@@ -10,10 +10,10 @@ def get_user_tweets(user_id):
     """
     query_params = {'user_pk': user_id}
     return cypher_query_as_dict(
-        """MATCH (USER)-[written_tweets:WRITES_TWEET]->(TWEET)
-WHERE USER.pk = {user_pk}
+        """MATCH (USER {pk:{user_pk}})-[w:WRITES_TWEET]->(TWEET)
+OPTIONAL MATCH (USER)-[l:LIKES_TWEET]->(TWEET)
 RETURN USER.pk as user_pk, USER.username as username, TWEET.pk as pk, TWEET.text as text,
-    toInt(written_tweets.created_at * 1000) as created_at
-ORDER BY written_tweets.created_at DESC""",
+    toInt(w.created_at * 1000) as created_at, l IS NOT NULL as is_liked
+ORDER BY w.created_at DESC""",
         params=query_params
     )

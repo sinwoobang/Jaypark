@@ -48,5 +48,5 @@ class Tweet(StructuredNode):
     text = StringProperty(required=True)
     user = RelationshipFrom('User', 'WRITES_TWEET', model=UserWritesTweet)
 
+    """Users who liked a tweet."""
     liked_users = RelationshipFrom('User', 'LIKES_TWEET', model=UserLikesTweet)
-

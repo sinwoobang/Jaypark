@@ -7,6 +7,7 @@ from django.urls import reverse
 from neomodel import db as graphdb
 
 from accounts.graphs import Tweet
+from common.utils import extract_hashtags
 
 APPLICATION_JSON = 'application/json'
 
@@ -45,10 +46,27 @@ class PostTest(TestCase):
     def test_api_write(self):
         """Test for post.apis.write"""
         url = reverse('post.api.write')
+
         text = 'Hi there!'
         raw_data = {'text': text}
         data = json.dumps(raw_data)
         res = self.client.post(path=url, data=data, content_type=APPLICATION_JSON)
 
-        tweet = Tweet.nodes.get_or_none()
-        self.assertIsNotNone(tweet, res.content)
+        tweet_node = Tweet.nodes.get_or_none()
+        self.assertIsNotNone(tweet_node, res.content)
+
+        """Test writing which contains HashTag"""
+        text = 'Hi there!#asdf'
+        raw_data = {'text': text}
+        data = json.dumps(raw_data)
+        res = self.client.post(path=url, data=data, content_type=APPLICATION_JSON)
+        res_content = json.loads(res.content)
+        tweet_id = res_content['contents']['tweet']['id']
+
+        tweet_node = Tweet.nodes.get_or_none(pk=tweet_id)
+        self.assertIsNotNone(tweet_node, res.content)
+
+        """Check whether a tag and a tweet are connected"""
+        tag = list(extract_hashtags(text))[0]
+        tag_node = tweet_node.tags.get_or_none(tag=tag)
+        self.assertIsNotNone(tag_node, res.content)

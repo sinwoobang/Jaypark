@@ -5,10 +5,10 @@ from json import JSONDecodeError
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from neomodel import db as graphdb, DoesNotExist as NodeDoesNotExist
+from neomodel import db as graphdb, DoesNotExist as NodeDoesNotExist, UniqueProperty
 
-from accounts.graphs import Tweet
-
+from accounts.graphs import Tweet, Tag
+from common.utils import extract_hashtags
 
 logger = logging.getLogger('debugging')
 
@@ -40,6 +40,18 @@ def write(request):
         tweet = Tweet(text=text).save()
         tweet.user.connect(user_node)
         graphdb.commit()
+
+        try:  # Parse tags
+            tags = extract_hashtags(text)
+            for tag in tags:
+                try:
+                    tag_node = Tag(tag=tag).save()
+                except UniqueProperty:
+                    tag_node = Tag.nodes.get(tag=tag)
+                tweet.tags.connect(tag_node)
+        except Exception as e:  # to prevent to be input a weird string
+            logger.error(f'Failed to parse tags : {text} {str(e)}')
+
     except Exception as e:
         logger.error(e)
         graphdb.rollback()
@@ -56,7 +68,7 @@ def write(request):
         'status_message': '',
         'contents': {
             'tweet': {
-                'pk': tweet.pk
+                'id': tweet.pk
             }
         }
     })

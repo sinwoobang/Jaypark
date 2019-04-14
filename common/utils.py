@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from neomodel import db as graphdb
@@ -38,3 +39,15 @@ def timestamp2datetime(timestamp):
 def username2url(username):
     """Return a url which redirects to a users' feed."""
     return f'https://jaypark.sinwoobang.me/{username}'
+
+
+def extract_hashtags(text):
+    """
+    Extract hashtags in the text
+    Original Post : https://stackoverflow.com/questions/2527892/
+    :param text: ex. "I love #stackoverflow because #people are very #helpful!"
+    :type text: str
+    :return: ex. {'#stackoverflow', '#people', '#helpful!'}
+    :rtype: set
+    """
+    return set(re.findall(r"#(\w+)", text))

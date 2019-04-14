@@ -19,6 +19,10 @@ class UserLikesTweet(StructuredRel):
     created_at = DateTimeProperty(default_now=True)
 
 
+class TweetHasTag(StructuredRel):
+    """Relationship when Tweet has a tag."""
+
+
 class User(StructuredNode):
     """Node User"""
     pk = IntegerProperty(unique_index=True, required=True)
@@ -49,4 +53,4 @@ class Tweet(StructuredNode):
     user = RelationshipFrom('User', 'WRITES_TWEET', model=UserWritesTweet)
 
     """Users who liked a tweet."""
-    liked_users = RelationshipFrom('User', 'LIKES_TWEET', model=UserLikesTweet)
+    users_liked = RelationshipFrom('User', 'LIKES_TWEET', model=UserLikesTweet)

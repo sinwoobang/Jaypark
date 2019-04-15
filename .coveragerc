@@ -19,6 +19,15 @@ omit =
     # Built-in WSGI
     */wsgi.py
 
+    # Django App Configuration
+    */apps.py
+    jaypark/__init__.py
+    jaypark/settings.py
+    manage.py
+
+    # Scripts
+    common/management/*
+
 [report]
 # Regexes for lines to exclude from consideration
 exclude_lines =

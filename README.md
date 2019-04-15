@@ -5,7 +5,7 @@ Twitter-like service powered by Django and Graph Database
 <img src="https://go.neo4j.com/rs/710-RRC-335/images/neo4j_logo.png?_ga=2.73466580.718215210.1555340602-745702593.1554483956" width="300" height="125"><br>
 
 Jaypark uses Graph Database to implement Social Network.<br>
-Neo4j, the main graph database supports various built-in features.
+[Neo4j](https://github.com/neo4j/neo4j), the main graph database supports various built-in features.
 
 ### What does Jaypark mean?
 [Jay Park](https://rocnation.com/jay-park/) is the first Asian singer to sign with [Roc Nation](https://rocnation.com/).<br>

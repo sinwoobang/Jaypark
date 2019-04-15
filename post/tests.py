@@ -6,6 +6,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from neomodel import db as graphdb
 
+from accounts.models import User
 from feed.graphs import Tweet
 from common.utils import extract_hashtags
 
@@ -29,19 +30,17 @@ class PostTest(TestCase):
     def setUp(self):
         """Setup to initialize data"""
         self.client = Client()
+        self.client.login(username=self.username, password=self.password)
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        logger.info("Clearing Graph...")
         neomodel.clear_neo4j_database(graphdb)
         neomodel.install_all_labels()
 
-        # register a user via API to prevent to be fragmented
-        url_register = reverse('account.api.register')
-        raw_data_register = {
-            'username': self.username,
-            'password1': self.password,
-            'password2': self.password,
-            'email': self.email
-        }
-        data_register = json.dumps(raw_data_register)
-        self.client.post(path=url_register, data=data_register, content_type=APPLICATION_JSON)
+        logger.info("Creating a user...")
+        User.objects.create_user(username=cls.username, password=cls.password)
         
     def test_api_write(self):
         """Test for post.apis.write"""

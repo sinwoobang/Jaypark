@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from neomodel import db as graphdb, DoesNotExist as NodeDoesNotExist, UniqueProperty
 
-from accounts.graphs import Tweet, Tag
+from feed.graphs import Tweet, Tag
 from common.utils import extract_hashtags
 
 logger = logging.getLogger('debugging')

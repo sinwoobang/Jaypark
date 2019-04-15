@@ -6,7 +6,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from neomodel import db as graphdb
 
-from accounts.graphs import Tweet
+from feed.graphs import Tweet
 from common.utils import extract_hashtags
 
 APPLICATION_JSON = 'application/json'

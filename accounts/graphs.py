@@ -19,6 +19,18 @@ class UserLikesTweet(StructuredRel):
     created_at = DateTimeProperty(default_now=True)
 
 
+class UserWritesComment(StructuredRel):
+    """Relationship when User writes a comment on a tweet."""
+    rel_name = 'WRITES'
+    created_at = DateTimeProperty(default_now=True)
+
+
+class UserLikesComment(StructuredRel):
+    """Relationship when User likes a comment on a tweet."""
+    rel_name = 'LIKES'
+    created_at = DateTimeProperty(default_now=True)
+
+
 class User(StructuredNode):
     """Node User"""
     pk = IntegerProperty(unique_index=True, required=True)
@@ -29,6 +41,13 @@ class User(StructuredNode):
 
     tweets_written = RelationshipTo('feed.graphs.Tweet', 'WRITES_TWEET')
     tweets_liked = RelationshipTo('feed.graphs.Tweet', 'LIKES_TWEET')
+
+    comments_written = RelationshipTo(
+        'post.graphs.Comment', UserWritesComment.rel_name, model=UserWritesComment
+    )
+    comments_liked = RelationshipTo(
+        'post.graphs.Comment', UserLikesComment.rel_name, model=UserLikesComment
+    )
 
     def get_db_object(self):
         """Get a object in DB"""

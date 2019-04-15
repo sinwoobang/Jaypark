@@ -27,6 +27,17 @@
                 {% else %}
                     <button class="btn btn-primary tweet--btn-unlike disabled" data-tweet-id="{{ tweet.tweet_id }}">UnLike</button>
                 {% endif %}
+
+                <div>
+                    <textarea type="text" class="tweet--text-comment" id="text-tweet-{{ tweet.tweet_id }}"></textarea>
+                    <button class="btn btn-primary tweet--btn-comment" data-tweet-id="{{ tweet.tweet_id }}">Comment</button>
+                    <div>
+                        <span class="anchor anchor-text no-global-action tweet--anchor-load-comments" data-tweet-id="{{ tweet.tweet_id }}">
+                            See comments
+                        </span>
+                        <div class="tweet--content-comments"></div>
+                    </div>
+                </div>
             </div>
             <hr>
         {% endfor %}
@@ -92,6 +103,24 @@
             } else {
                 alert(res.status_message);
             }
+        });
+      });
+
+      $('.tweet--btn-comment').on('click', function() {
+        var tweetId = $(this).data('tweet-id');
+        var textDomId = '#text-tweet-' + tweetId;
+        var text = $(textDomId).val();
+        var postData = {
+          tweet_id: tweetId,
+          text: text
+        };
+        sendPostRequestWithJson('{% url 'post.api.write_comment' %}', postData, function(res) {
+          if (res.status === 'success') {
+            alert(res.status_message);
+            document.location.reload();
+          } else {
+            alert(res.status_message);
+          }
         });
       })
     });

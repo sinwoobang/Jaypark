@@ -4,6 +4,7 @@ from neomodel import (
 )
 
 from accounts.graphs import UserWritesTweet, UserLikesTweet
+from post.graphs import CommentWrittenOnTweet
 
 
 class TweetHasTag(StructuredRel):
@@ -22,6 +23,11 @@ class Tweet(StructuredNode):
 
     """Users who liked a tweet."""
     users_liked = RelationshipFrom('accounts.graphs.User', 'LIKES_TWEET', model=UserLikesTweet)
+
+    """Comments which are written on a tweet."""
+    comments_written = RelationshipFrom(
+        'post.graphs.Comment', CommentWrittenOnTweet.rel_name, model=CommentWrittenOnTweet
+    )
 
 
 class Tag(StructuredNode):

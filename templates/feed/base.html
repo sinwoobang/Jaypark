@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>Feed</title>
     <link rel='stylesheet' href='{% static 'lib/bootstrap/dist/css/bootstrap.min.css' %}'>
+    <link rel='stylesheet' href='{% static 'feed/css/base.css' %}'>
     <script type='text/javascript' src='{% static 'lib/jquery/dist/jquery.min.js' %}'></script>
     <script type='text/javascript' src='{% static 'lib/bootstrap/dist/js/bootstrap.bundle.min.js' %}'></script>
     <script type="text/javascript">
@@ -25,6 +26,29 @@
           }
         })
       }
+
+      $(document).ready(function() {
+        $('span.anchor-text').on('click', function(e) {
+          var $this = $(e.currentTarget);
+          var hasNoGlobalActionOption = $this.hasClass('no-global-action');
+          if (hasNoGlobalActionOption) {
+            return false;
+          }
+
+          var target = $this.data('target');
+          var href = $this.data('href');
+          if (!href) {
+            console.info('No href');
+            return false;
+          }
+
+          if (target === 'blank') {
+            window.open(href, target);
+          } else {
+            window.location.href = href;
+          }
+        })
+      });
     </script>
     {% block head %}
     {% endblock %}

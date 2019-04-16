@@ -28,3 +28,16 @@ class User(AbstractUser):
         """Create a node in Graph"""
         from accounts.graphs import User as UserNode
         return UserNode(pk=self.id, username=self.username).save()
+
+    def has_profile_photo(self):
+        """
+        Check the value of UserNode.profile_photo_url is None or not.
+        :return: True if it has it or False
+        :rtype: bool
+        """
+        return self.get_or_create_node().has_profile_photo()
+
+    def get_profile_photo_url(self):
+        """Get the url of the photo of Profile"""
+        return self.get_or_create_node().profile_photo_url
+

@@ -35,6 +35,7 @@ class User(StructuredNode):
     """Node User"""
     pk = IntegerProperty(unique_index=True, required=True)
     username = StringProperty(unique_index=True, required=True)
+    profile_photo_url = StringProperty()
 
     following = RelationshipTo('User', 'FOLLOWS')
     followed = RelationshipFrom('User', 'FOLLOWS', model=UserFollows)
@@ -53,6 +54,9 @@ class User(StructuredNode):
         """Get a object in DB"""
         from accounts.models import User as DBUser
         return DBUser.objects.get(id=self.pk)
+
+    def has_profile_photo(self):
+        return bool(self.profile_photo_url)
 
     def sync_with_db(self):
         """Synchronize self with DB data"""

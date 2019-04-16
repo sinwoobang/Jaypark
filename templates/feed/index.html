@@ -3,6 +3,11 @@
 {% load common_filters %}
 {% block content %}
 <div>
+    <div class="form-group">
+        <form id="form-account-update" enctype="multipart/form-data">
+            <input type="file" class="form-control-file" id="file-profile-photo">
+        </form>
+    </div>
     <div>
         <label for="text-username-to-follow">Follow : </label>
         <input type="text" id="text-username-to-follow" name="username" />
@@ -122,7 +127,50 @@
             alert(res.status_message);
           }
         });
-      })
+      });
+
+      var $fileProfilePhoto = $('#file-profile-photo');
+      $fileProfilePhoto.on('change', function(e) {
+        var $this = $(e.currentTarget);
+        var val = $this.val();
+        if (!val) {
+          return false;
+        }
+        var allowedExtensions = ['jpeg', 'jpg', 'png'];
+        var lastIndexOfReverseSlash = val.lastIndexOf("\\");
+        var filename = val.substring(lastIndexOfReverseSlash+1);
+        console.info('Filename : '+ filename);
+
+        var lastIndexOfDot = filename.lastIndexOf('.');
+        if (lastIndexOfDot > -1) {
+          var extension = filename.substring(lastIndexOfDot+1).toLowerCase();
+          if (allowedExtensions.indexOf(extension) === -1) {
+            alert('Only ' + allowedExtensions.join(', ') + ' are allowed.');
+            $this.val('');
+            return false;
+          }
+        }
+
+        var form = $('#form-account-update');
+        var formData = new FormData(form);
+        formData.append('file', e.currentTarget.files[0]);
+
+        $.ajax({
+          type : "POST",
+          url : "{% url 'account.api.update' %}",
+          processData: false,
+          contentType: false,
+          cache : false,
+          beforeSend: function(request) {
+            request.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+          },
+          data : formData,
+          success : function(res) {
+            console.info(res.contents);
+            $('#img-profile-photo').attr('src', res.contents.profile_photo_url)
+          }
+        });
+      });
     });
 </script>
 {% endblock %}

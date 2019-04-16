@@ -12,6 +12,7 @@ from django.views.decorators.http import require_http_methods
 
 from accounts.forms import UserCreationForm
 from accounts.graphs import User as UserNode
+from common.models import Image
 
 User = get_user_model()
 logger = logging.getLogger('debugging')
@@ -162,4 +163,36 @@ def follow(request):
         'status': 'success',
         'status_code': '',
         'status_message': ''
+    })
+
+
+@require_http_methods(['POST'])
+@login_required
+def update(request):
+    """
+    Update Profile API that updates the photo and some features in the future.
+    """
+    file = request.FILES.get('file')
+    if not file:
+        return JsonResponse({
+            'status': 'error',
+            'status_code': 'invalid_file',
+            'status_message': 'No file exists.'
+        })
+
+    image = Image(image=file)
+    image.save()
+
+    image_url = image.image.url
+    user_node = request.user.get_or_create_node()
+    user_node.profile_photo_url = image_url
+    user_node.save()
+
+    return JsonResponse({
+        'status': 'success',
+        'status_code': '',
+        'status_message': '',
+        'contents': {
+            'profile_photo_url': image_url
+        }
     })

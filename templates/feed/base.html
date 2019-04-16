@@ -57,6 +57,9 @@
 <div>
 Auth :
 {% if user.is_authenticated %}
+    {% if user.has_profile_photo %}
+        <img id="img-profile-photo" src="{{ user.get_profile_photo_url }}" alt="profile-photo" width="100" height="100">
+    {% endif %}
     You are logged in as {{ user.username }}.
     <a href='{% url 'logout' %}'>Logout</a>
 {% else %}

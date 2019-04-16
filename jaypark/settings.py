@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import sys
 
+import boto3
 from neomodel import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -45,7 +46,8 @@ INSTALLED_APPS = [
     'feed',
     'accounts',
     'post',
-    'common'
+    'common',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -170,3 +172,18 @@ LOGGING = {
 }
 
 AUTH_USER_MODEL = 'accounts.User'
+
+
+# Django Storage
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_QUERYSTRING_AUTH = False
+S3_USE_SIGV4 = True
+AWS_S3_USE_SSL = True
+AWS_STORAGE_BUCKET_NAME = 'jaypark'
+AWS_REGION = 'ap-northeast-2'
+AWS_S3_HOST = 's3.%s.amazonaws.com' % AWS_REGION
+AWS_DEFAULT_ACL = 'public-read'
+
+credential = boto3.session.Session(profile_name='jaypark').get_credentials()
+AWS_ACCESS_KEY_ID = credential.access_key
+AWS_SECRET_ACCESS_KEY = credential.secret_key

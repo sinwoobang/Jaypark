@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth import get_user_model
 from neomodel import UniqueProperty
 
@@ -21,3 +23,14 @@ def sync_db_users_to_graph():
             user_node.username = u.username
             user_node.pk = u.id
             user_node.save()
+
+
+def generate_photo_profile_path(instance, filename):
+    """
+    Generate the url of the photo of profile.
+    The below params are the format of Django ImageField.
+    :param instance:
+    :param filename:
+    :return:
+    """
+    return 'photo/profile/{}'.format(uuid.uuid4().hex)

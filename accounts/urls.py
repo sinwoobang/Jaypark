@@ -12,7 +12,7 @@ urlpatterns = [
 urlpatterns += [
     path('api/login/', apis.login, name='account.api.login'),
     path('api/register/', apis.register, name='account.api.register'),
-    path('follow/', apis.follow, name='account.api.follow'),
+    path('api/follow/', apis.follow, name='account.api.follow'),
 ]
 urlpatterns += default_urlpatterns  # Default Django supported views of accounts
 

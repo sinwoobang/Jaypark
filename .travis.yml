@@ -24,7 +24,7 @@ before_install:
   cypher-shell -u neo4j -p neo4jfirstlogin --non-interactive "CALL dbms.security.createUser(\"${TEST_GRAPH_USERNAME}\", \"${TEST_GRAPH_PASSWORD}\", false)"
 - sleep 2
 - sudo apt-get install python3-dev gcc  # to make Coverage Computing fast by using C Extension
-- ./etc/ci_aws_credentials.sh
+- bash ./etc/ci_aws_credentials.sh
 install:
 - pip install -r requirements/dev.txt
 before_script:

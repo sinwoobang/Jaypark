@@ -5,8 +5,8 @@ from django.http import Http404
 from django.shortcuts import render
 
 from accounts.models import User
-from common.utils import cypher_query_as_dict
 from feed.utils import get_user_tweets
+from common.utils.etc import cypher_query_as_dict
 
 logger = logging.getLogger('debugging')
 

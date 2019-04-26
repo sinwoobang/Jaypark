@@ -1,4 +1,4 @@
-from common.utils import cypher_query_as_dict
+from common.utils.etc import cypher_query_as_dict
 
 
 def get_user_tweets(user_id):

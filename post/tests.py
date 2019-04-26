@@ -9,8 +9,10 @@ from neomodel import db as graphdb
 from accounts.models import User
 from accounts.graphs import User as UserNode
 from feed.graphs import Tweet
-from common.utils import extract_hashtags
 from post.graphs import Comment as CommentNode
+
+from common.utils.etc import extract_hashtags
+
 
 APPLICATION_JSON = 'application/json'
 

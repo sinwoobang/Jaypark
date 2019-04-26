@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from common.utils import extract_hashtags
+from common.utils.etc import extract_hashtags
 
 
 class FeedTest(TestCase):

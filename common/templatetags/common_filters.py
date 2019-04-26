@@ -1,6 +1,6 @@
 from django import template
 
-from common.utils import timestamp2datetime, username2url
+from common.utils.etc import timestamp2datetime, username2url
 
 register = template.Library()
 

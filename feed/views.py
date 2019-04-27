@@ -16,11 +16,8 @@ def feed(request):
     """The View Main Feed which is personalized."""
     user = request.user
     user_node = user.get_or_create_node()
-    followings_nodes = user_node.following.all()
-    followeds_nodes = user_node.followed.all()
-
-    logger.info('following {}'.format(followings_nodes))
-    logger.info('followed {}'.format(followeds_nodes))
+    number_followings = len(user_node.following.all())
+    number_followeds = len(user_node.followed.all())
 
     """Get following's tweets"""
     followings_tweets_query = """
@@ -77,7 +74,11 @@ RETURN following.pk as following_pk, following.username as following_username,
         feed_tweets.append(tweet)
     feed_tweets.sort(key=lambda c: c['score'] + c['created_at'], reverse=True)
 
-    ct = {'user': user, 'feed_tweets': feed_tweets}
+    ct = {
+        'user': user, 'feed_tweets': feed_tweets,
+        'number_followings': number_followings,
+        'number_followeds': number_followeds
+    }
     return render(request, 'feed/index.html', ct)
 
 

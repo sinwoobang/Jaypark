@@ -2,7 +2,19 @@
 {% load staticfiles %}
 {% load common_filters %}
 {% block content %}
-<div>
+<div class="row">
+    <div class="col">
+        <div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@{{ user.username }}</h5>
+                    <p class="card-text">Following : {{ number_followings }}</p>
+                    <p class="card-text">Followers : {{ number_followeds }}</p>
+                </div>
+            </div>
+    </div>
+</div>
+<div class="col-7">
     <div class="form-group">
         <form id="form-account-update" enctype="multipart/form-data">
             <input type="file" class="form-control-file" id="file-profile-photo">
@@ -47,6 +59,8 @@
             <hr>
         {% endfor %}
     </div>
+</div>
+<div class="col"></div>
 </div>
 <script>
     $(document).ready(function() {

@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 
+from django.conf import settings
 from neomodel import db as graphdb
 
 
@@ -51,3 +52,10 @@ def extract_hashtags(text):
     :rtype: set
     """
     return set(re.findall(r"#(\w+)", text))
+
+
+def get_current_host_url():
+    """Get the host url based on the current server status"""
+    if settings.DEBUG:
+        return 'http://jaypark.sinwoobang.me:8000'
+    return 'http://jaypark.sinwoobang.me'

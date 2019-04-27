@@ -1,4 +1,8 @@
+from urllib.parse import urljoin
+
 from django.contrib.auth.models import AbstractUser
+
+from common.utils.etc import get_current_host_url
 
 
 class User(AbstractUser):
@@ -39,5 +43,12 @@ class User(AbstractUser):
 
     def get_profile_photo_url(self):
         """Get the url of the photo of Profile"""
-        return self.get_or_create_node().profile_photo_url
+        if not self.has_profile_photo():
+            return self.get_or_create_node().profile_photo_url
+        return 'https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png'
+
+    def get_profile_url(self):
+        """Get the url of a specific user's home"""
+        host_url = get_current_host_url()
+        return urljoin(host_url, self.username)
 

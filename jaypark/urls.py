@@ -24,5 +24,5 @@ urlpatterns = [
     path('feed/', include('feed.urls')),
     path('accounts/', include('accounts.urls')),
     path('post/', include('post.urls')),
-    path('<username>/', RedirectView.as_view(pattern_name='feed_user')),  # To redirect to a user's feed. Keep it as the last view to prevent to conflict with the other views.
+    path('<username>/', RedirectView.as_view(pattern_name='feed.user')),  # To redirect to a user's feed. Keep it as the last view to prevent to conflict with the other views.
 ]

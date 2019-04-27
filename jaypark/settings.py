@@ -31,7 +31,7 @@ SECRET_KEY = '3liy0^&fcl-(b%_l%h=)$o0)4(8lwqiy=5*3@r+$5!oyt$e4js'
 DEBUG = True
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['jaypark.sinwoobang.me']
 
 
 # Application definition

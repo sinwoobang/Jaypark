@@ -2,3 +2,8 @@ span.anchor-text {
     cursor: pointer;
     color: #007bff;
 }
+
+#navbar-profile-img {
+    width: 36px;
+    height: 36px;
+}

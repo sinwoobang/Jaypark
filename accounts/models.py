@@ -43,7 +43,7 @@ class User(AbstractUser):
 
     def get_profile_photo_url(self):
         """Get the url of the photo of Profile"""
-        if not self.has_profile_photo():
+        if self.has_profile_photo():
             return self.get_or_create_node().profile_photo_url
         return 'https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png'
 

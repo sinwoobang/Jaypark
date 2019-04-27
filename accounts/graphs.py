@@ -1,3 +1,5 @@
+from enum import Enum
+
 from neomodel import (
     StructuredNode, RelationshipFrom, RelationshipTo, StringProperty,
     IntegerProperty, DateTimeProperty, StructuredRel
@@ -31,6 +33,11 @@ class UserLikesComment(StructuredRel):
     created_at = DateTimeProperty(default_now=True)
 
 
+class UserScoreType(Enum):
+    """Enum Score types corresponding to User's status"""
+    EACH_FOLLOWED = 300
+
+
 class User(StructuredNode):
     """Node User"""
     pk = IntegerProperty(unique_index=True, required=True)
@@ -54,6 +61,13 @@ class User(StructuredNode):
         """Get a object in DB"""
         from accounts.models import User as DBUser
         return DBUser.objects.get(id=self.pk)
+
+    def get_score(self):
+        """
+        The influence score of a user
+        It will be used as the base score of Tweet.
+        """
+        return len(self.nodes.followed.all()) * UserScoreType.EACH_FOLLOWED.value
 
     def has_profile_photo(self):
         return bool(self.profile_photo_url)

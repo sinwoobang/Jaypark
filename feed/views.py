@@ -47,13 +47,14 @@ RETURN following.pk as following_pk, following.username as following_username,
 
         tweet_id = node['tweet']['pk']
         text = node['tweet']['text']
+        score = node['tweet']['score'] or 0
 
         is_liked = node['is_liked']
         created_at = node['created_at']
 
         tweet = {
             'user_id': _user_id, 'username': username, 'tweet_id': tweet_id, 'text': text,
-            'is_me': is_me, 'is_liked': is_liked, 'created_at': created_at
+            'is_me': is_me, 'is_liked': is_liked, 'score': score, 'created_at': created_at
         }
         feed_tweets.append(tweet)
 
@@ -64,16 +65,17 @@ RETURN following.pk as following_pk, following.username as following_username,
 
         tweet_id = node['pk']
         text = node['text']
+        score = node['score'] or 0
 
         is_liked = node['is_liked']
         created_at = node['created_at']
 
         tweet = {
             'user_id': _user_id, 'username': username, 'tweet_id': tweet_id, 'text': text,
-            'is_me': is_me, 'is_liked': is_liked, 'created_at': created_at
+            'is_me': is_me, 'is_liked': is_liked, 'score': score, 'created_at': created_at
         }
         feed_tweets.append(tweet)
-    feed_tweets.sort(key=lambda c: c['created_at'], reverse=True)
+    feed_tweets.sort(key=lambda c: c['score'] + c['created_at'], reverse=True)
 
     ct = {'user': user, 'feed_tweets': feed_tweets}
     return render(request, 'feed/index.html', ct)
@@ -88,7 +90,7 @@ def feed_user(request, username):
     except User.DoesNotExist:
         raise Http404("User not found.")
 
-    tweets_nodes = get_user_tweets(target_user.id)
+    tweets_nodes = get_user_tweets(target_user.id, 'created_at')
 
     logger.debug('tweets : {}'.format(tweets_nodes))
 

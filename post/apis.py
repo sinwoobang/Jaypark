@@ -7,10 +7,10 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from neomodel import db as graphdb, DoesNotExist as NodeDoesNotExist, UniqueProperty
 
-from feed.graphs import Tweet, Tag
+from feed.graphs import Tweet, Tag, TweetScoreType
 from post.graphs import Comment as CommentNode
 from common.utils.etc import extract_hashtags
-
+from post.models import ScoringHistory, ScoringHistoryType
 
 logger = logging.getLogger('debugging')
 
@@ -39,10 +39,17 @@ def write(request):
     graphdb.begin()  # Set a save point to make a relationship between a user and a tweet.
     try:
         user_node = request.user.get_or_create_node()
-        tweet = Tweet(text=text).save()
+        score = user_node.get_score()
+        tweet = Tweet(text=text, score=score).save()
         tweet.user.connect(user_node)
         graphdb.commit()
 
+        ScoringHistory.objects.create(
+            user=request.user,
+            tweet_id=tweet.pk,
+            type=ScoringHistoryType.POST_COMMENT.value,
+            cumulative_score=score, delta_score=score
+        )
         try:  # Parse tags
             tags = extract_hashtags(text)
             for tag in tags:
@@ -116,6 +123,21 @@ def like(request):
 
     user_node.tweets_liked.connect(tweet_node)
 
+    current_score = tweet_node.score
+    type = TweetScoreType.LIKED.name
+    delta_score = TweetScoreType.LIKED.value
+    cumulative_score = current_score + delta_score
+
+    tweet_node.score = cumulative_score
+    tweet_node.save()
+
+    ScoringHistory.objects.create(
+        user=request.user,
+        tweet_id=tweet_node.pk,
+        type=type,
+        cumulative_score=cumulative_score, delta_score=delta_score
+    )
+
     return JsonResponse({
         'status': 'success',
         'status_code': '',
@@ -162,6 +184,21 @@ def unlike(request):
         })
 
     user_node.tweets_liked.disconnect(tweet_node)
+
+    current_score = tweet_node.score
+    type = TweetScoreType.UNLIKED.name
+    delta_score = TweetScoreType.UNLIKED.value
+    cumulative_score = current_score + delta_score
+
+    tweet_node.score = cumulative_score
+    tweet_node.save()
+
+    ScoringHistory.objects.create(
+        user=request.user,
+        tweet_id=tweet_node.pk,
+        type=type,
+        cumulative_score=cumulative_score, delta_score=delta_score
+    )
 
     return JsonResponse({
         'status': 'success',
@@ -214,6 +251,21 @@ def write_comment(request):
     comment_node.tweet.connect(tweet_node)
     comment_node.user.connect(user_node)
     graphdb.commit()
+
+    current_score = tweet_node.score
+    type = TweetScoreType.COMMENTED.name
+    delta_score = TweetScoreType.COMMENTED.value
+    cumulative_score = current_score + delta_score
+
+    tweet_node.score = cumulative_score
+    tweet_node.save()
+
+    ScoringHistory.objects.create(
+        user=request.user,
+        tweet_id=tweet_node.pk,
+        type=type,
+        cumulative_score=cumulative_score, delta_score=delta_score
+    )
 
     return JsonResponse({
         'status': 'success',

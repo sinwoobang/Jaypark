@@ -1,6 +1,8 @@
+from enum import Enum
+
 from neomodel import (
     StructuredNode, UniqueIdProperty, StringProperty, RelationshipFrom,
-    RelationshipTo, DateTimeProperty, StructuredRel
+    RelationshipTo, DateTimeProperty, StructuredRel, FloatProperty
 )
 
 from accounts.graphs import UserWritesTweet, UserLikesTweet
@@ -10,6 +12,13 @@ from post.graphs import CommentWrittenOnTweet
 class TweetHasTag(StructuredRel):
     """Relationship when Tweet has a tag."""
     pass
+
+
+class TweetScoreType(Enum):
+    LIKED = 200
+    UNLIKED = -LIKED
+    COMMENTED = 2000
+    UNCOMMENTED = -COMMENTED
 
 
 class Tweet(StructuredNode):
@@ -28,6 +37,12 @@ class Tweet(StructuredNode):
     comments_written = RelationshipFrom(
         'post.graphs.Comment', CommentWrittenOnTweet.rel_name, model=CommentWrittenOnTweet
     )
+
+    """
+    The field score and constants for Scoring System.
+    The default score is the result of User.get_score() to reflect the user's influence score.
+    """
+    score = FloatProperty(required=True)
 
 
 class Tag(StructuredNode):

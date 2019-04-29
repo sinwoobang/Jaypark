@@ -64,10 +64,10 @@
         };
         sendPostRequestWithJson('{% url 'post.api.write' %}', postData, function(res) {
           if (res.status === 'success') {
-            alert('Success.');
+            alert(res.status_message);
             document.location.reload();
           } else {
-            alert('Failed.');
+            alert('Please try again later.');
           }
         });
       });
@@ -80,11 +80,11 @@
         };
         sendPostRequestWithJson('{% url 'account.api.follow' %}', postData, function(res) {
           if (res.status === 'success') {
-            alert('Success.');
+            alert(res.status_message);
             document.location.reload();
-            } else {
-                alert(res.status_message);
-            }
+          } else {
+            alert('Please try again later.');
+          }
         });
       });
 
@@ -95,11 +95,11 @@
         };
         sendPostRequestWithJson('{% url 'post.api.like' %}', postData, function(res) {
           if (res.status === 'success') {
-            alert('Success.');
+            alert(res.status_message);
             document.location.reload();
-            } else {
-                alert(res.status_message);
-            }
+          } else {
+            alert('Please try again later.');
+          }
         });
       });
 
@@ -110,11 +110,11 @@
         };
         sendPostRequestWithJson('{% url 'post.api.unlike' %}', postData, function(res) {
           if (res.status === 'success') {
-            alert('Success.');
+            alert(res.status_message);
             document.location.reload();
-            } else {
-                alert(res.status_message);
-            }
+          } else {
+            alert('Please try again later.');
+          }
         });
       });
 
@@ -134,7 +134,7 @@
             };
             document.location.href += '?' + $.param(getParams);
           } else {
-            alert(res.status_message);
+            alert('Please try again later');
           }
         });
       });

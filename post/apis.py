@@ -79,7 +79,7 @@ def write(request):
     return JsonResponse({
         'status': 'success',
         'status_code': '',
-        'status_message': '',
+        'status_message': 'The tweet has been written',
         'contents': {
             'tweet': {
                 'id': tweet.pk
@@ -146,7 +146,7 @@ def like(request):
     return JsonResponse({
         'status': 'success',
         'status_code': '',
-        'status_message': ''
+        'status_message': 'Now you like the tweet.'
     })
 
 
@@ -208,7 +208,7 @@ def unlike(request):
     return JsonResponse({
         'status': 'success',
         'status_code': '',
-        'status_message': ''
+        'status_message': "You don't like the tweet anymore."
     })
 
 
@@ -275,7 +275,7 @@ def write_comment(request):
     return JsonResponse({
         'status': 'success',
         'status_code': '',
-        'status_message': 'A comment was written.',
+        'status_message': 'The comment has been written.',
         'contents': {
             'comment': {'id': comment_node.pk}
         }

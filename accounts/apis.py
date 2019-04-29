@@ -162,7 +162,7 @@ def follow(request):
     return JsonResponse({
         'status': 'success',
         'status_code': '',
-        'status_message': ''
+        'status_message': f'Now you are following {target_user.username}.'
     })
 
 

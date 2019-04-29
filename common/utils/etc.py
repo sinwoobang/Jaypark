@@ -61,7 +61,7 @@ def datetime2timestamp(dt, default_timezone=None):
 
 def username2url(username):
     """Return a url which redirects to a users' feed."""
-    return f'https://jaypark.sinwoobang.me/{username}'
+    return f'{get_current_host_url()}/{username}'
 
 
 def extract_hashtags(text):
@@ -81,3 +81,16 @@ def get_current_host_url():
     if settings.DEBUG:
         return 'http://jaypark.sinwoobang.me:8000'
     return 'http://jaypark.sinwoobang.me'
+
+
+def get_human_number(num):
+    """Get Human Readable Format of the number."""
+    if num < 1000:
+        return num
+
+    magnitude = 0
+    while abs(num) >= 1000:
+        magnitude += 1
+        num /= 1000.0
+    # add more suffixes if you need them
+    return '%.2f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])

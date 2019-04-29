@@ -7,9 +7,10 @@
         <div>
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">@{{ user.username }}</h5>
-                    <p class="card-text">Following : {{ number_followings }}</p>
-                    <p class="card-text">Followers : {{ number_followeds }}</p>
+                    <h5 class="card-title">Social Feed</h5>
+                    <p class="card-text small">
+                        Check your follower's tweets
+                    </p>
                 </div>
             </div>
         </div>
@@ -18,7 +19,7 @@
         <div class="form-group" id="container-form-post">
             <label class="d-none" for="text-post"></label>
             <div class="mt-0" id="container-form-post--contents">
-                <img class="d-inline-block rounded container-form-post--img-profile-photo" src="{{ user.get_profile_photo_url }}" alt="profile-img">
+                <img class="d-inline-block rounded container-form-post--img-profile-photo" src="{{ request.user.get_profile_photo_url }}" alt="profile-img">
                 <textarea class="d-inline-block mt-1 form-control" id="text-post" placeholder="Let's tweet!"></textarea>
             </div>
             <button class="btn btn-primary float-right" type="button" id="btn-post">Tweet</button>

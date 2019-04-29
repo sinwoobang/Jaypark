@@ -6,7 +6,7 @@ from django.shortcuts import render
 
 from accounts.models import User
 from feed.utils import get_user_tweets
-from common.utils.etc import cypher_query_as_dict
+from common.utils.etc import cypher_query_as_dict, get_human_number
 
 logger = logging.getLogger('debugging')
 
@@ -91,18 +91,50 @@ RETURN following.pk as following_pk, following.username as following_username,
 def feed_user(request, username):
     """The View User Feed for a specific user."""
     is_me = request.user.username == username  # if the user who is finding is the user logged in.
+
     try:
-        target_user = User.objects.get(username=username)
+        user = User.objects.get(username=username)
     except User.DoesNotExist:
-        raise Http404("User not found.")
+        raise Http404()
 
-    tweets_nodes = get_user_tweets(target_user.id, 'created_at')
+    user_node = user.get_or_create_node()
+    number_followings = get_human_number(len(user_node.following.all()))
+    number_followeds = get_human_number(len(user_node.followed.all()))
 
-    logger.debug('tweets : {}'.format(tweets_nodes))
+    my_tweets_nodes = get_user_tweets(user.id)  # tweets which are posted by me.
+    logger.debug(my_tweets_nodes)
+
+    """The below codes will compose feed."""
+    feed_tweets = []  # A list that contains contents which composes feed.
+    for node in my_tweets_nodes:
+        _user_id = node['user_pk']  # To distinguish a writer and the login user
+        _is_me = _user_id == user.id
+        username = node['username']
+        profile_photo_url = node['profile_photo_url'] or User.DEFAULT_PROFILE_PHOTO_URL
+
+        tweet_id = node['pk']
+        text = node['text']
+        score = node['score'] or 0
+
+        is_liked = node['is_liked']
+        created_at = node['created_at']
+
+        tweet = {
+            'user_id': _user_id, 'username': username, 'tweet_id': tweet_id, 'text': text,
+            'is_me': _is_me, 'is_liked': is_liked, 'score': score, 'created_at': created_at,
+            'profile_photo_url': profile_photo_url
+        }
+        feed_tweets.append(tweet)
+    feed_tweets.sort(key=lambda c: c['score'] + c['created_at'], reverse=True)
+
+    session_user_node = request.user.get_or_create_node()
+    is_following = user_node.followed.is_connected(session_user_node)
 
     ct = {
-        'user': request.user, 'target_user': target_user, 'tweets': tweets_nodes,
-        'is_me': is_me,
+        'is_me': is_me, 'user': user, 'feed_tweets': feed_tweets,
+        'is_following': is_following,
+        'number_followings': number_followings,
+        'number_followeds': number_followeds
     }
     return render(request, 'feed/user.html', ct)
 

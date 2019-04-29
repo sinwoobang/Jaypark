@@ -138,7 +138,7 @@ def follow(request):
                 'status_code': 'invalid_data',
                 'status_message': 'Data `user_id` is required.'
             })
-        user_filter['user_id'] = user_id
+        user_filter['id'] = user_id
     else:
         return JsonResponse({
             'status': 'error',
@@ -163,6 +163,76 @@ def follow(request):
         'status': 'success',
         'status_code': '',
         'status_message': f'Now you are following {target_user.username}.'
+    })
+
+
+@require_http_methods(['POST'])
+@login_required
+def unfollow(request):
+    """
+    Unfollowing API that unfollow someone.
+
+    request.GET
+    - key(str) : The value is 'username' or 'user_id'.
+        It determines which field will be used for finding a user.
+    - username(str) : A username to find a user.
+    - user_id(int) : A user id username to find a user.
+    """
+    try:
+        body_data = json.loads(request.body)
+    except JSONDecodeError:
+        return JsonResponse({
+            'status': 'error',
+            'status_code': 'invalid_body',
+            'status_message': 'No json data exists.'
+        })
+
+    user_filter = {}
+    key = body_data.get('key')
+    if key == 'username':
+        username = body_data.get('username', None)
+        if not username:
+            return JsonResponse({
+                'status': 'error',
+                'status_code': 'invalid_data',
+                'status_message': 'Data `username` is required.'
+            })
+
+        user_filter['username'] = username
+    elif key == 'user_id':
+        try:
+            user_id = int(body_data.get('user_id', None))
+        except (ValueError, TypeError):
+            return JsonResponse({
+                'status': 'error',
+                'status_code': 'invalid_data',
+                'status_message': 'Data `user_id` is required.'
+            })
+        user_filter['id'] = user_id
+    else:
+        return JsonResponse({
+            'status': 'error',
+            'status_code': 'invalid_data',
+            'status_message': 'Data `key` is invalid.'
+        })
+
+    try:
+        target_user = User.objects.get(**user_filter)
+        target_user_node = target_user.get_or_create_node()
+    except User.DoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'status_code': 'invalid_data',
+            'status_message': 'The target user does not exist.'
+        })
+
+    user_node = UserNode.nodes.get(username=request.user.username)
+    user_node.following.disconnect(target_user_node)
+
+    return JsonResponse({
+        'status': 'success',
+        'status_code': '',
+        'status_message': f"You don't follow {target_user.username} anymore."
     })
 
 

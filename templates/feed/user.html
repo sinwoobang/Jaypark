@@ -1,22 +1,311 @@
 {% extends "feed/base.html" %}
+{% load staticfiles %}
 {% load common_filters %}
 {% block content %}
-<div>
-    <h4>Welcome to {{ target_user.username }}'s feed</h4>
-    <div>
-        <span>Tweets</span>
-        {% for tweet in tweets %}
-            <div id="tweet-{{ tweet.pk }}" class="tweet">
-                <span>Text : </span>
-                <p>{{ tweet.text }}<p>
-                <span>{{ tweet.created_at|timestamp2datetime }}</span>
+<div class="row">
+    <div class="col">
+        <div>
+            <div class="card card--profile">
+                <div class="card-body">
+                    <img class="rounded" id="card--profile--img-profile-photo" src="{{ user.get_profile_photo_url }}" alt="profile-url">
+                    {% if is_me %}
+                    <input class="d-none" type="file" id="file-profile-photo">
+                    {% endif %}
+                    <h6 class="mt-1 card-title">@{{ user.username }}</h6>
+                    <div class="card-text mb-sm-1">
+                        <span class="badge badge-light">Following : {{ number_followings }}</span>
+                        <span class="badge badge-light">Followers : {{ number_followeds }}</span>
+                    </div>
+                    {% if not is_me %}
+                    <div class="card">
+                        {% if is_following %}
+                        <button class="btn btn-outline-gray card--profile-btn-unfollow" data-user-id="{{ user.id }}">Unfollow</button>
+                        {% else %}
+                        <button class="btn btn-outline-gray card--profile-btn-follow" data-user-id="{{ user.id }}">Follow</button>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-        {% endfor %}
+        </div>
+    </div>
+    <div class="col-6 bg-white">
+        {% if is_me %}
+        <div class="form-group" id="container-form-post">
+            <label class="d-none" for="text-post"></label>
+            <div class="mt-0" id="container-form-post--contents">
+                <img class="d-inline-block rounded container-form-post--img-profile-photo" src="{{ user.get_profile_photo_url }}" alt="profile-img">
+                <textarea class="d-inline-block mt-1 form-control" id="text-post" placeholder="Let's tweet!"></textarea>
+            </div>
+            <button class="btn btn-primary float-right" type="button" id="btn-post">Tweet</button>
+        </div>
+        {% endif %}
+        <div>
+            {% for tweet in feed_tweets %}
+                {% include 'feed/tweet.html' %}
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col"></div>
+    <div>
+        <!-- Modal -->
+        <div class="modal fade" id="modal-comments" tabindex="-1" role="dialog" aria-labelledby="modal-comments--label" aria-hidden="true">
+            <div class="modal-dialog" role="document" id="modal-comments--dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-comments--label">Comments</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pre-scrollable" id="modal-comments--contents">
+                    </div>
+                    <div class="modal-footer" id="modal-comments--footer">
+                        <div>
+                            <textarea class="d-inline-block form-control" id="modal-comments--footer--text-comment"></textarea>
+                            <button type="button" class="d-inline-block btn btn-primary" id="modal-comments--footer--btn-comment">Comment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script>
     $(document).ready(function() {
+      var isMe = '{{ is_me }}' === 'True';
 
+      $('#btn-post').click(function() {
+        var text = $('#text-post').val();
+        var postData = {
+          text: text
+        };
+        sendPostRequestWithJson('{% url 'post.api.write' %}', postData, function(res) {
+          if (res.status === 'success') {
+            alert(res.status_message);
+            document.location.reload();
+          } else {
+            alert('Please try again later.');
+          }
+        });
+      });
+
+      $('.card--profile-btn-follow').click(function(e) {
+        var userId = $(e.currentTarget).data('user-id');
+        var postData = {
+            key: 'user_id',
+            user_id: userId
+        };
+        sendPostRequestWithJson('{% url 'account.api.follow' %}', postData, function(res) {
+          if (res.status === 'success') {
+            alert(res.status_message);
+            document.location.reload();
+          } else {
+            alert('Please try again later.');
+          }
+        });
+      });
+
+      $('.card--profile-btn-unfollow').click(function(e) {
+        var userId = $(e.currentTarget).data('user-id');
+        var postData = {
+            key: 'user_id',
+            user_id: userId
+        };
+        sendPostRequestWithJson('{% url 'account.api.unfollow' %}', postData, function(res) {
+          if (res.status === 'success') {
+            alert(res.status_message);
+            document.location.reload();
+          } else {
+            alert('Please try again later.');
+          }
+        });
+      });
+
+      $('.tweet--btn-like').click(function() {
+        var tweetId = $(this).data('tweet-id');
+        var postData = {
+            tweet_id: tweetId
+        };
+        sendPostRequestWithJson('{% url 'post.api.like' %}', postData, function(res) {
+          if (res.status === 'success') {
+            alert(res.status_message);
+            document.location.reload();
+          } else {
+            alert('Please try again later.');
+          }
+        });
+      });
+
+      $('.tweet--btn-unlike').click(function() {
+        var tweetId = $(this).data('tweet-id');
+        var postData = {
+            tweet_id: tweetId
+        };
+        sendPostRequestWithJson('{% url 'post.api.unlike' %}', postData, function(res) {
+          if (res.status === 'success') {
+            alert(res.status_message);
+            document.location.reload();
+          } else {
+            alert('Please try again later.');
+          }
+        });
+      });
+
+      $('#modal-comments--footer--btn-comment').on('click', function() {
+        var tweetId = $(this).data('tweet-id');
+        var text = $('#modal-comments--footer--text-comment').val();
+        var postData = {
+          tweet_id: tweetId,
+          text: text
+        };
+        sendPostRequestWithJson('{% url 'post.api.write_comment' %}', postData, function(res) {
+          if (res.status === 'success') {
+            alert(res.status_message);
+            var getParams = {
+              tweet_id: tweetId,
+              is_comment: 'True'
+            };
+            document.location.href += '?' + $.param(getParams);
+          } else {
+            alert('Please try again later');
+          }
+        });
+      });
+
+      var $fileProfilePhoto = $('#file-profile-photo');
+      $fileProfilePhoto.on('change', function(e) {
+        var $this = $(e.currentTarget);
+        var val = $this.val();
+        if (!val) {
+          return false;
+        }
+        var allowedExtensions = ['jpeg', 'jpg', 'png'];
+        var lastIndexOfReverseSlash = val.lastIndexOf("\\");
+        var filename = val.substring(lastIndexOfReverseSlash+1);
+        console.info('Filename : '+ filename);
+
+        var lastIndexOfDot = filename.lastIndexOf('.');
+        if (lastIndexOfDot > -1) {
+          var extension = filename.substring(lastIndexOfDot+1).toLowerCase();
+          if (allowedExtensions.indexOf(extension) === -1) {
+            alert('Only ' + allowedExtensions.join(', ') + ' are allowed.');
+            $this.val('');
+            return false;
+          }
+        }
+
+        var form = $('#form-account-update');
+        var formData = new FormData(form);
+        formData.append('file', e.currentTarget.files[0]);
+
+        $.ajax({
+          type : "POST",
+          url : "{% url 'account.api.update' %}",
+          processData: false,
+          contentType: false,
+          cache : false,
+          beforeSend: function(request) {
+            request.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+          },
+          data : formData,
+          success : function(res) {
+            $('#card--profile--img-profile-photo').attr('src', res.contents.profile_photo_url)
+            document.location.reload();
+          }
+        });
+      });
+
+      function seeComments(target) {
+        /* Load comments from server and append it the dom. */
+        var $this;
+        if (typeof target === 'object') {
+          $this = $(target.currentTarget);
+        } else {
+          var domId = '.tweet--btn-see-comments[data-tweet-id="' + target + '"]';
+          $this = $(domId);
+        }
+        var tweetId = $this.data('tweet-id');
+        var getParams = {
+          tweet_id: tweetId
+        };
+
+        initComments(tweetId);
+        sendGetRequestWithJson('{% url 'post.api.get_comments' %}', getParams, function(res) {
+          if (res.status === 'success') {
+            if (res.contents.comments.length > 0) {
+              appendComments(res.contents.comments);
+            } else {
+              displayNoComments();
+            }
+          }
+        });
+      }
+
+      $('.tweet--btn-see-comments').on('click', seeComments);
+
+      function getCommentsDOM() {
+        /* Return Comments DOM To reload it every time without caching. */
+        return $('#modal-comments--contents')
+      }
+
+      function initComments(tweetId) {
+        /* Clear Comments DOM to load another comments. */
+        var $dom = getCommentsDOM();
+        $dom.html('');
+
+        var $textComment = $('#modal-comments--footer--text-comment');
+        $textComment.val('');
+
+        var $btnComment = $('#modal-comments--footer--btn-comment');
+        $btnComment.data('tweet-id', tweetId);
+      }
+
+      function displayNoComments() {
+        /* When a comments doesn't exist */
+        var $dom = getCommentsDOM();
+        $dom.html('There is no comment.');
+      }
+
+      function appendComments(comments) {
+        for (var i = 0; i < comments.length; i++) {
+          appendComment(comments[i]);
+        }
+      }
+
+      function appendComment(comment) {
+        var $dom = getCommentsDOM();
+        var commentsContents = '<div class="md-sm-6 modal-comments--content" data-comment-id="$id">\n    <div class="d-inline-block colm-sm-7 pl-sm-3 pr-sm-3 small">\n        <a class="d-inline-block" href="$profile_url" target="_blank">@$username</a>\n        <span class="d-inline-block">$timesince</span>\n        <p class="modal-comments--text-context">\n            $text\n        </p>\n    </div>\n    <hr>\n</div>';
+        commentsContents = commentsContents.replace('$profile_photo_url', comment.user.profile_photo_url);
+        commentsContents = commentsContents.replace('$username', comment.user.username);
+        commentsContents = commentsContents.replace('$profile_url', comment.user.profile_url);
+        commentsContents = commentsContents.replace('$id', comment.id);
+        commentsContents = commentsContents.replace('$text', comment.text);
+        commentsContents = commentsContents.replace('$timesince', comment.timesince);
+        $dom.append(commentsContents);
+      }
+
+      if (isMe) {
+        var $profilePhoto = $('#card--profile--img-profile-photo');
+        $profilePhoto.css('cursor', 'pointer');
+        $profilePhoto.on('click', function(e) {
+          $('#file-profile-photo').trigger('click');
+        });
+      }
+
+      (function init() {
+        /* Do action by Query String. */
+        var tweetId = getUrlParameter('tweet_id');
+        var isComment = getUrlParameter('is_comment') === 'True';
+
+        if (tweetId && isComment) {  // Load comments if Params are there
+          seeComments(tweetId);
+          var pathname = document.location.pathname;
+          window.history.pushState({path: pathname}, '', pathname);
+          $('#modal-comments').modal('show');
+        }
+      })();
     });
 </script>
 {% endblock %}

@@ -10,6 +10,36 @@
     <script type='text/javascript' src='{% static 'lib/jquery/dist/jquery.min.js' %}'></script>
     <script type='text/javascript' src='{% static 'lib/bootstrap/dist/js/bootstrap.bundle.min.js' %}'></script>
     <script type="text/javascript">
+      var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+          sURLVariables = sPageURL.split('&'),
+          sParameterName,
+          i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split('=');
+
+          if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+          }
+        }
+      };
+
+      function sendGetRequestWithJson(url, data, cb) {
+        // To send a get request with JSON and adding CSRF TOKEN to Header.
+
+        $.ajax({
+          url: url + '?' + $.param(data),
+          type: 'GET',
+          beforeSend: function(request) {
+            request.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+          },
+          success: function(res) {
+            cb(res);
+          }
+        })
+      }
+
       function sendPostRequestWithJson(url, data, cb) {
         // To send a post request with JSON and adding CSRF TOKEN to Header.
         $.ajax({
@@ -18,6 +48,7 @@
           data: JSON.stringify(data),
           contentType: 'application/json',
           dataType: 'json',
+          cache: false,
           beforeSend: function(request) {
             request.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
           },
@@ -47,6 +78,10 @@
           } else {
             window.location.href = href;
           }
+        });
+
+        $('.img-profile-photo').on('error', function(e) {
+          $(e.currentTarget).attr('src', '{{ DEFAULT_PROFILE_PHOTO_URL }}');
         })
       });
     </script>
@@ -80,7 +115,7 @@
         </ul>
     </div>
 </nav>
-<div class="container-fluid pt-3">
+<div class="container pt-3">
 {% block content %}
 {% endblock %}
 </div>

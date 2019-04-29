@@ -1,6 +1,6 @@
 from neomodel import (
     StructuredNode, UniqueIdProperty, StringProperty, StructuredRel,
-    DateTimeProperty, RelationshipFrom, RelationshipTo
+    DateTimeProperty, RelationshipFrom, RelationshipTo, One
 )
 
 from accounts.graphs import UserWritesComment, UserLikesComment
@@ -18,7 +18,8 @@ class Comment(StructuredNode):
     text = StringProperty()
 
     user = RelationshipFrom(
-        'accounts.graphs.User', UserWritesComment.rel_name, model=UserWritesComment
+        'accounts.graphs.User', UserWritesComment.rel_name, model=UserWritesComment,
+        cardinality=One
     )
     tweet = RelationshipTo(
         'feed.graphs.Tweet', CommentWrittenOnTweet.rel_name, model=CommentWrittenOnTweet

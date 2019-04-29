@@ -1,7 +1,12 @@
+import datetime
 import json
 import logging
 from json import JSONDecodeError
 
+from django.utils.timesince import timesince
+
+from accounts.models import User
+from common.utils.etc import datetime2timestamp
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
@@ -123,7 +128,7 @@ def like(request):
 
     user_node.tweets_liked.connect(tweet_node)
 
-    current_score = tweet_node.score
+    current_score = tweet_node.score or 0
     type = TweetScoreType.LIKED.name
     delta_score = TweetScoreType.LIKED.value
     cumulative_score = current_score + delta_score
@@ -185,7 +190,7 @@ def unlike(request):
 
     user_node.tweets_liked.disconnect(tweet_node)
 
-    current_score = tweet_node.score
+    current_score = tweet_node.score or 0
     type = TweetScoreType.UNLIKED.name
     delta_score = TweetScoreType.UNLIKED.value
     cumulative_score = current_score + delta_score
@@ -252,7 +257,7 @@ def write_comment(request):
     comment_node.user.connect(user_node)
     graphdb.commit()
 
-    current_score = tweet_node.score
+    current_score = tweet_node.score or 0
     type = TweetScoreType.COMMENTED.name
     delta_score = TweetScoreType.COMMENTED.value
     cumulative_score = current_score + delta_score
@@ -366,4 +371,58 @@ def unlike_comment(request):
         'status': 'success',
         'status_code': '',
         'status_message': 'Your unlike was reflected.'
+    })
+
+
+@require_http_methods(['GET'])
+def get_comments(request):
+    """Get Comments API"""
+    tweet_id = request.GET.get('tweet_id')
+    if not tweet_id:
+        return JsonResponse({
+            'status': 'error',
+            'status_code': 'invalid_data',
+            'status_message': '`tweet_id` is required.'
+        })
+
+    try:
+        tweet = Tweet.nodes.get(pk=tweet_id)
+        writes_relationship = tweet.comments_written
+        comments_nodes = tweet.comments_written.all()
+    except Tweet.DoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'status_code': 'tweet_none',
+            'status_message': 'The tweet does not exist.'
+        })
+
+    comments = []
+    for comment_node in comments_nodes:
+        created_at = writes_relationship.relationship(comment_node).created_at.replace(tzinfo=None)
+        print(datetime.datetime.now())
+        comment_user_node = comment_node.user.get()
+        comment_user = User(username=comment_user_node.username)
+        comment = {
+            'id': comment_node.pk,
+            'text': comment_node.text,
+            'user': {
+                'id': comment_node.id,
+                'username': comment_user_node.username,
+                'profile_url': comment_user.get_profile_url(),
+                'profile_photo_url':
+                    comment_user_node.profile_photo_url or User.DEFAULT_PROFILE_PHOTO_URL
+            },
+            'timesince': timesince(created_at, now=datetime.datetime.now()),
+            'created_at': datetime2timestamp(created_at)
+        }
+        comments.append(comment)
+    comments.sort(key=lambda c: ['created_at'], reverse=True)
+
+    return JsonResponse({
+        'status': 'success',
+        'status_code': '',
+        'status_message': '',
+        'contents': {
+            'comments': comments
+        }
     })

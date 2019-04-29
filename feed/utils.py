@@ -12,8 +12,10 @@ def get_user_tweets(user_id, order_by=None):
 
     query = """MATCH (USER {pk:{user_pk}})-[w:WRITES_TWEET]->(TWEET)
         OPTIONAL MATCH (USER)-[l:LIKES_TWEET]->(TWEET)
-        RETURN USER.pk as user_pk, USER.username as username, TWEET.pk as pk, TWEET.text as text,
-            TWEET.score as score,
+        RETURN USER.pk as user_pk, USER.username as username, 
+            USER.profile_photo_url as profile_photo_url,
+            TWEET.pk as pk, TWEET.text as text,
+            TWEET.score as score, 
             toInt(w.created_at * 1000) as created_at, l IS NOT NULL as is_liked
         """
 

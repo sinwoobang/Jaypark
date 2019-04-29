@@ -21,10 +21,11 @@ def feed(request):
 
     """Get following's tweets"""
     followings_tweets_query = """
-MATCH (user:User {pk: {user_pk}})-[:FOLLOWS]->(following)-[w:WRITES_TWEET]->(tweet)
-OPTIONAL MATCH (user)-[l:LIKES_TWEET]->(tweet)
+MATCH (user:User {pk: {user_pk}})-[:FOLLOWS]->(following)-[w:WRITES_TWEET]->(TWEET)
+OPTIONAL MATCH (user)-[l:LIKES_TWEET]->(TWEET)
 RETURN following.pk as following_pk, following.username as following_username,
-    tweet, toInt(w.created_at * 1000) as created_at,
+    following.profile_photo_url as profile_photo_url, 
+    TWEET as tweet, toInt(w.created_at * 1000) as created_at,
     l IS NOT NULL as is_liked"""
     followings_tweets_nodes = cypher_query_as_dict(
         followings_tweets_query,
@@ -41,6 +42,7 @@ RETURN following.pk as following_pk, following.username as following_username,
         _user_id = node['following_pk']  # To distinguish a writer and the login user
         is_me = _user_id == user.id
         username = node['following_username']
+        profile_photo_url = node['profile_photo_url'] or User.DEFAULT_PROFILE_PHOTO_URL
 
         tweet_id = node['tweet']['pk']
         text = node['tweet']['text']
@@ -51,7 +53,8 @@ RETURN following.pk as following_pk, following.username as following_username,
 
         tweet = {
             'user_id': _user_id, 'username': username, 'tweet_id': tweet_id, 'text': text,
-            'is_me': is_me, 'is_liked': is_liked, 'score': score, 'created_at': created_at
+            'is_me': is_me, 'is_liked': is_liked, 'score': score, 'created_at': created_at,
+            'profile_photo_url': profile_photo_url
         }
         feed_tweets.append(tweet)
 
@@ -59,6 +62,7 @@ RETURN following.pk as following_pk, following.username as following_username,
         _user_id = node['user_pk']  # To distinguish a writer and the login user
         is_me = _user_id == user.id
         username = node['username']
+        profile_photo_url = node['profile_photo_url'] or User.DEFAULT_PROFILE_PHOTO_URL
 
         tweet_id = node['pk']
         text = node['text']
@@ -69,7 +73,8 @@ RETURN following.pk as following_pk, following.username as following_username,
 
         tweet = {
             'user_id': _user_id, 'username': username, 'tweet_id': tweet_id, 'text': text,
-            'is_me': is_me, 'is_liked': is_liked, 'score': score, 'created_at': created_at
+            'is_me': is_me, 'is_liked': is_liked, 'score': score, 'created_at': created_at,
+            'profile_photo_url': profile_photo_url
         }
         feed_tweets.append(tweet)
     feed_tweets.sort(key=lambda c: c['score'] + c['created_at'], reverse=True)

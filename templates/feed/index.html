@@ -12,55 +12,48 @@
                     <p class="card-text">Followers : {{ number_followeds }}</p>
                 </div>
             </div>
+        </div>
     </div>
-</div>
-<div class="col-7">
-    <div class="form-group">
-        <form id="form-account-update" enctype="multipart/form-data">
-            <input type="file" class="form-control-file" id="file-profile-photo">
-        </form>
+    <div class="col-6 bg-white">
+        <div class="form-group" id="container-form-post">
+            <label class="d-none" for="text-post"></label>
+            <div class="mt-0" id="container-form-post--contents">
+                <img class="d-inline-block rounded container-form-post--img-profile-photo" src="{{ user.get_profile_photo_url }}" alt="profile-img">
+                <textarea class="d-inline-block mt-1 form-control" id="text-post" placeholder="Let's tweet!"></textarea>
+            </div>
+            <button class="btn btn-primary float-right" type="button" id="btn-post">Tweet</button>
+        </div>
+        <div>
+            {% for tweet in feed_tweets %}
+                {% include 'feed/tweet.html' %}
+                <hr>
+            {% endfor %}
+        </div>
     </div>
+    <div class="col"></div>
     <div>
-        <label for="text-username-to-follow">Follow : </label>
-        <input type="text" id="text-username-to-follow" name="username" />
-        <button class="btn btn-primary" type="button" id="btn-follow">Follow</button>
-    </div>
-    <div class='form-group'>
-        <label for='text-post'></label>
-        <textarea class='form-control' id='text-post' placeholder="Let's tweet!"></textarea>
-        <button class='btn btn-primary' type='button' id='btn-post'>Tweet</button>
-    </div>
-    <hr>
-    <h3>Tweets</h3>
-    <hr>
-    <div>
-        {% for tweet in feed_tweets %}
-            <div id="tweet-{{ tweet.tweet_id }}" class="tweet">
-                <p>{{ tweet.text }}<p>
-                <span>Tweet By <span><a href="{{ tweet.username|username2url }}">{{ tweet.username }}</a></span></span>
-                <span>{{ tweet.created_at|timestamp2datetime }}</span>
-                {% if not tweet.is_liked %}
-                    <button class="btn btn-primary tweet--btn-like" data-tweet-id="{{ tweet.tweet_id }}">Like</button>
-                {% else %}
-                    <button class="btn btn-primary tweet--btn-unlike disabled" data-tweet-id="{{ tweet.tweet_id }}">UnLike</button>
-                {% endif %}
-
-                <div>
-                    <textarea type="text" class="tweet--text-comment" id="text-tweet-{{ tweet.tweet_id }}"></textarea>
-                    <button class="btn btn-primary tweet--btn-comment" data-tweet-id="{{ tweet.tweet_id }}">Comment</button>
-                    <div>
-                        <span class="anchor anchor-text no-global-action tweet--anchor-load-comments" data-tweet-id="{{ tweet.tweet_id }}">
-                            See comments
-                        </span>
-                        <div class="tweet--content-comments"></div>
+        <!-- Modal -->
+        <div class="modal fade" id="modal-comments" tabindex="-1" role="dialog" aria-labelledby="modal-comments--label" aria-hidden="true">
+            <div class="modal-dialog" role="document" id="modal-comments--dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-comments--label">Comments</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pre-scrollable" id="modal-comments--contents">
+                    </div>
+                    <div class="modal-footer" id="modal-comments--footer">
+                        <div>
+                            <textarea class="d-inline-block form-control" id="modal-comments--footer--text-comment"></textarea>
+                            <button type="button" class="d-inline-block btn btn-primary" id="modal-comments--footer--btn-comment">Comment</button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <hr>
-        {% endfor %}
+        </div>
     </div>
-</div>
-<div class="col"></div>
 </div>
 <script>
     $(document).ready(function() {
@@ -125,10 +118,9 @@
         });
       });
 
-      $('.tweet--btn-comment').on('click', function() {
+      $('#modal-comments--footer--btn-comment').on('click', function() {
         var tweetId = $(this).data('tweet-id');
-        var textDomId = '#text-tweet-' + tweetId;
-        var text = $(textDomId).val();
+        var text = $('#modal-comments--footer--text-comment').val();
         var postData = {
           tweet_id: tweetId,
           text: text
@@ -136,7 +128,11 @@
         sendPostRequestWithJson('{% url 'post.api.write_comment' %}', postData, function(res) {
           if (res.status === 'success') {
             alert(res.status_message);
-            document.location.reload();
+            var getParams = {
+              tweet_id: tweetId,
+              is_comment: 'True'
+            };
+            document.location.href += '?' + $.param(getParams);
           } else {
             alert(res.status_message);
           }
@@ -185,6 +181,88 @@
           }
         });
       });
+
+      function seeComments(target) {
+        /* Load comments from server and append it the dom. */
+        var $this;
+        if (typeof target === 'object') {
+          $this = $(target.currentTarget);
+        } else {
+          var domId = '.tweet--btn-see-comments[data-tweet-id="' + target + '"]';
+          $this = $(domId);
+        }
+        var tweetId = $this.data('tweet-id');
+        var getParams = {
+          tweet_id: tweetId
+        };
+
+        initComments(tweetId);
+        sendGetRequestWithJson('{% url 'post.api.get_comments' %}', getParams, function(res) {
+          if (res.status === 'success') {
+            if (res.contents.comments.length > 0) {
+              appendComments(res.contents.comments);
+            } else {
+              displayNoComments();
+            }
+          }
+        });
+      }
+
+      $('.tweet--btn-see-comments').on('click', seeComments);
+
+      function getCommentsDOM() {
+        /* Return Comments DOM To reload it every time without caching. */
+        return $('#modal-comments--contents')
+      }
+
+      function initComments(tweetId) {
+        /* Clear Comments DOM to load another comments. */
+        var $dom = getCommentsDOM();
+        $dom.html('');
+
+        var $textComment = $('#modal-comments--footer--text-comment');
+        $textComment.val('');
+
+        var $btnComment = $('#modal-comments--footer--btn-comment');
+        $btnComment.data('tweet-id', tweetId);
+      }
+
+      function displayNoComments() {
+        /* When a comments doesn't exist */
+        var $dom = getCommentsDOM();
+        $dom.html('There is no comment.');
+      }
+
+      function appendComments(comments) {
+        for (var i = 0; i < comments.length; i++) {
+          appendComment(comments[i]);
+        }
+      }
+
+      function appendComment(comment) {
+        var $dom = getCommentsDOM();
+        var commentsContents = '<div class="md-sm-6 modal-comments--content" data-comment-id="$id">\n    <div class="d-inline-block colm-sm-7 pl-sm-3 pr-sm-3 small">\n        <a class="d-inline-block" href="$profile_url" target="_blank">@$username</a>\n        <span class="d-inline-block">$timesince</span>\n        <p class="modal-comments--text-context">\n            $text\n        </p>\n    </div>\n    <hr>\n</div>';
+        commentsContents = commentsContents.replace('$profile_photo_url', comment.user.profile_photo_url);
+        commentsContents = commentsContents.replace('$username', comment.user.username);
+        commentsContents = commentsContents.replace('$profile_url', comment.user.profile_url);
+        commentsContents = commentsContents.replace('$id', comment.id);
+        commentsContents = commentsContents.replace('$text', comment.text);
+        commentsContents = commentsContents.replace('$timesince', comment.timesince);
+        $dom.append(commentsContents);
+      }
+
+      (function init() {
+        /* Do action by Query String. */
+        var tweetId = getUrlParameter('tweet_id');
+        var isComment = getUrlParameter('is_comment') === 'True';
+
+        if (tweetId && isComment) {  // Load comments if Params are there
+          seeComments(tweetId);
+          var pathname = document.location.pathname;
+          window.history.pushState({path: pathname}, '', pathname);
+          $('#modal-comments').modal('show');
+        }
+      })();
     });
 </script>
 {% endblock %}

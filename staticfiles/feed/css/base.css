@@ -3,7 +3,76 @@ span.anchor-text {
     color: #007bff;
 }
 
+button {
+    outline:0 !important;;
+    text-decoration: none !important;
+}
+
 #navbar-profile-img {
     width: 36px;
     height: 36px;
+}
+
+#text-post {
+    width: 70%;
+}
+
+#container-form-post {
+    height: 130px;
+}
+
+#container-form-post--contents {
+    height: 70px;
+}
+
+.container-form-post--img-profile-photo {
+    width: 62px;
+    height: 62px;
+    position: relative;
+    top: -26px;
+}
+
+#text-post {
+    width: 87%;
+}
+
+.tweet--img-profile-photo {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    top: -55px;
+}
+
+#modal-comments--dialog {
+    margin-left: 30%;
+    margin-right: 20%;
+    max-width: 40%;
+}
+
+#modal-comments--footer {
+    display: block;
+    height: 100px;
+}
+
+#modal-comments--footer--text-comment {
+    width: 75%;
+    height: 60px;
+    resize: none;
+}
+
+#modal-comments--footer--btn-comment {
+    width: 22%;
+    height: 60px;
+    position: relative;
+    top: -26px;
+}
+
+.modal-comments--content--img-profile-photo {
+    vertical-align: top;
+    width: 60px;
+    height: 60px;
+}
+
+.modal-comments--text-content {
+    width: 90%
 }

@@ -60,6 +60,14 @@
     $(document).ready(function() {
       $('#btn-post').click(function() {
         var text = $('#text-post').val();
+        if (!text) {
+          alert('Please input the text.');
+          return false;
+        } else if (text.length > 140) {
+          alert('The length of the text cannot exceed 140 letters.');
+          return false;
+        }
+
         var postData = {
           text: text
         };
@@ -122,6 +130,13 @@
       $('#modal-comments--footer--btn-comment').on('click', function() {
         var tweetId = $(this).data('tweet-id');
         var text = $('#modal-comments--footer--text-comment').val();
+        if (!text) {
+          alert('Please input the text.');
+          return false;
+        } else if (text.length > 140) {
+          alert('The length of the text cannot exceed 140 letters.');
+          return false;
+        }
         var postData = {
           tweet_id: tweetId,
           text: text
@@ -242,7 +257,7 @@
 
       function appendComment(comment) {
         var $dom = getCommentsDOM();
-        var commentsContents = '<div class="md-sm-6 modal-comments--content" data-comment-id="$id">\n    <div class="d-inline-block colm-sm-7 pl-sm-3 pr-sm-3 small">\n        <a class="d-inline-block" href="$profile_url" target="_blank">@$username</a>\n        <span class="d-inline-block">$timesince</span>\n        <p class="modal-comments--text-context">\n            $text\n        </p>\n    </div>\n    <hr>\n</div>';
+        var commentsContents = '<div class="md-sm-6 modal-comments--content" data-comment-id="$id">\n    <div class="d-inline-block col-sm-12 pl-sm-3 pr-sm-3 small">\n        <a class="d-inline-block" href="$profile_url" target="_blank">@$username</a>\n        <span class="d-inline-block">$timesince</span>\n        <p class="modal-comments--text-context">\n            $text\n        </p>\n    </div>\n    <hr>\n</div>';
         commentsContents = commentsContents.replace('$profile_photo_url', comment.user.profile_photo_url);
         commentsContents = commentsContents.replace('$username', comment.user.username);
         commentsContents = commentsContents.replace('$profile_url', comment.user.profile_url);

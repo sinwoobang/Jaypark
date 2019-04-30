@@ -1,6 +1,6 @@
 {% load common_filters %}
 <div id="tweet-{{ tweet.tweet_id }}" class="tweet row1">
-    <div class="d-inline-block col-sm-1 pl-sm-2 mr-0">
+    <div class="d-inline-block col-sm-1 pl-sm-2 mr-0 tweet--container-img-profile-photo align-top">
         <img class="rounded tweet--img-profile-photo" src="{{ tweet.profile_photo_url }}" alt="profile-img">
     </div>
     <div class="d-inline-block col-sm-10 pr-0">
@@ -9,7 +9,9 @@
                 <a class="label" href="{{ tweet.username|username2url }}">@{{ tweet.username }}</a>
                 <span>{{ tweet.created_at|timestamp2datetime|timesince:now }}</span>
             </div>
-            <p class="">{{ tweet.text }}</p>
+            <p class="tweet--text">
+                {{ tweet.text }}
+            </p>
         </div>
         <div class="d-block">
             <div class="d-inline-block">

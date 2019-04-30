@@ -27,7 +27,7 @@
 
       function sendGetRequestWithJson(url, data, cb) {
         // To send a get request with JSON and adding CSRF TOKEN to Header.
-
+        data['dummy'] = new Date().getTime();
         $.ajax({
           url: url + '?' + $.param(data),
           type: 'GET',

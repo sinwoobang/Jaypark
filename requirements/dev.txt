@@ -1,4 +1,4 @@
-Django==2.2
+Django<2.2
 neo4j==1.7.2
 neo4j-driver==1.6.3
 neobolt==1.7.4
@@ -11,3 +11,4 @@ coverage==4.5.3
 django-storages==1.7.1
 boto3==1.9.130
 Pillow==6.0.0
+mysqlclient==1.4.2.post1

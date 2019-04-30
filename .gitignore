@@ -307,4 +307,7 @@ bower_components
 .bower-registry
 .bower-tmp
 
+# Server Secret
+password.py
+
 # End

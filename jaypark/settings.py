@@ -24,12 +24,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3liy0^&fcl-(b%_l%h=)$o0)4(8lwqiy=5*3@r+$5!oyt$e4js'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = '3liy0^&fcl-(b%_l%h=)$o0)4(8lwqiy=5*3@r+$5!oyt$e4js'
+if not TESTING:
+    from jaypark.password import SECRET_KEY as IMPORTED_SECRET_KEY
+    SECRET_KEY = IMPORTED_SECRET_KEY
 
 ALLOWED_HOSTS = ['jaypark.sinwoobang.me']
 
@@ -86,12 +89,18 @@ WSGI_APPLICATION = 'jaypark.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+DATABASES = {}
+if TESTING:
+    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-}
+elif DEBUG:
+    from jaypark.password import DEBUG_DATABASE
+    DATABASES = DEBUG_DATABASE
+else:
+    DATABASES['default'] = {}
+
 
 # Graph
 config.DATABASE_URL = 'bolt://jaypark:jay@graph@localhost:7687'  # default

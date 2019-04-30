@@ -82,7 +82,7 @@
 
         $('.img-profile-photo').on('error', function(e) {
           $(e.currentTarget).attr('src', '{{ DEFAULT_PROFILE_PHOTO_URL }}');
-        })
+        });
       });
     </script>
     {% block head %}
@@ -97,8 +97,12 @@
                 <a class="nav-link" href="{% url 'feed.index' %}">Home</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <form class="form-inline my-2 my-lg-0"
+              id="navbar--text-search"
+              method="get"
+              action="{% url 'feed.search' %}"
+        >
+            <input class="form-control mr-sm-2" type="search" required placeholder="Search" aria-label="Search" name="query" value="{{ searched_text|default:"" }}">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
         <ul class="navbar-nav ml-1 mr-0">

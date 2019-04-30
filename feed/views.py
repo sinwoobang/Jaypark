@@ -2,7 +2,7 @@ import logging
 
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from accounts.models import User
 from feed.utils import get_user_tweets
@@ -134,7 +134,16 @@ def feed_user(request, username):
         'is_me': is_me, 'user': user, 'feed_tweets': feed_tweets,
         'is_following': is_following,
         'number_followings': number_followings,
-        'number_followeds': number_followeds
+        'number_followeds': number_followeds,
+        'searched_text': user.username
     }
     return render(request, 'feed/user.html', ct)
 
+
+@login_required
+def feed_search(request):
+    """The View Search for User"""
+    query = request.GET.get('query')
+    if not User.objects.filter(username=query).exists():
+        raise Http404()
+    return redirect('feed.user', username=query)

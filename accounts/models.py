@@ -13,7 +13,7 @@ class User(AbstractUser):
     Username and password are required. Other fields are optional.
     """
     DEFAULT_PROFILE_PHOTO_URL = (
-        'https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png'
+        'https://jaypark.s3.amazonaws.com/photo/profile/dbbec8e8fbc64a91b16b580aa391d872'
     )
 
     class Meta(AbstractUser.Meta):

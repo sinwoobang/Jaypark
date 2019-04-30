@@ -7,6 +7,17 @@
     <title>Feed</title>
     <link rel='stylesheet' href='{% static 'lib/bootstrap/dist/css/bootstrap.min.css' %}'>
     <link rel='stylesheet' href='{% static 'feed/css/base.css' %}'>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139306815-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-139306815-1');
+    </script>
+
     <script type='text/javascript' src='{% static 'lib/jquery/dist/jquery.min.js' %}'></script>
     <script type='text/javascript' src='{% static 'lib/bootstrap/dist/js/bootstrap.bundle.min.js' %}'></script>
     <script type="text/javascript">

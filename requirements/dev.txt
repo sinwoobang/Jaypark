@@ -12,3 +12,4 @@ django-storages==1.7.1
 boto3==1.9.130
 Pillow==6.0.0
 mysqlclient==1.4.2.post1
+gunicorn==19.9.0

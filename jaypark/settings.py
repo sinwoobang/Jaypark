@@ -80,6 +80,7 @@ TEMPLATES = [
             'context_processors': [
                 'feed.context_processors.default_profile_photo_url',
                 'feed.context_processors.datetimes',
+                'feed.context_processors.absolute_url',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',

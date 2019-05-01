@@ -4,7 +4,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Feed</title>
+    <title>Jaypark</title>
+    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}" type="image/x-icon">
+    <link rel="icon" href="{% static "img/favicon.ico" %}" type="image/x-icon">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Jaypark - Social Media">
+    <meta property="og:site_name" content="Jaypark">
+    <meta property="og:url" content="{{ ABSOLUTE_URL }}">
+    <meta property="og:description" content="See the world through Jaypark">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="{{ HOST_URL }}{% static "img/logo-full.png" %}">
+
     <link rel='stylesheet' href='{% static 'lib/bootstrap/dist/css/bootstrap.min.css' %}'>
     <link rel='stylesheet' href='{% static 'feed/css/base.css' %}'>
 

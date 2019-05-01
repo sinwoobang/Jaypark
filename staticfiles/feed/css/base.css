@@ -18,6 +18,10 @@ button {
     height: 36px;
 }
 
+#login--img-full-logo {
+    width: 100%;
+}
+
 #text-post {
     width: 70%;
 }
@@ -96,4 +100,70 @@ button {
 .tweet--text {
     width: 100%;
     word-wrap: break-word
+}
+
+#form-login label {
+    margin-left: 5%;
+    margin-bottom: 1%;
+    vertical-align: center;
+}
+
+#table-login {
+    width: 100%;
+}
+
+#table-login tr {
+    height: 45px;
+}
+
+.table-login--label {
+    font-size: 20px;
+    width: 25px;
+}
+
+#table-login--text-username, #table-login--text-password {
+    width: 85%;
+}
+
+#table-login--text-username input[type=text], #table-login--text-password input[type=password] {
+    width: 100%;
+    height: 45px;
+}
+
+#table-login--btn-login {
+    height: 45px;
+    margin-top: 1%;
+}
+
+#form-register label {
+    margin-left: 5%;
+    margin-bottom: 1%;
+    vertical-align: center;
+}
+
+#table-register {
+    width: 100%;
+}
+
+#table-register tr {
+    height: 45px;
+}
+
+.table-register--label {
+    font-size: 15px;
+    width: 30px;
+}
+
+.table-register--input-text {
+    width: 77%;
+}
+
+.table-register--input-text input {
+    width: 100%;
+    height: 45px;
+}
+
+#table-register--btn-register {
+    font-size: 20px;
+    width: 30px;
 }

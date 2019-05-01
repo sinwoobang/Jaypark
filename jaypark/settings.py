@@ -31,7 +31,8 @@ def _is_local():
 
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
-DEBUG = not _is_local() and not TESTING
+DEBUG = _is_local() and not TESTING
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '3liy0^&fcl-(b%_l%h=)$o0)4(8lwqiy=5*3@r+$5!oyt$e4js'

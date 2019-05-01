@@ -116,6 +116,7 @@
             <input class="form-control mr-sm-2" type="search" required placeholder="Search" aria-label="Search" name="query" value="{{ searched_text|default:"" }}">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
+        {% if request.user.is_authenticated %}
         <ul class="navbar-nav ml-1 mr-0">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -128,6 +129,7 @@
                 </div>
             </li>
         </ul>
+        {% endif %}
     </div>
 </nav>
 <div class="container pt-3">

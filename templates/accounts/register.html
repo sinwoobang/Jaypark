@@ -1,29 +1,47 @@
-{% extends "accounts/base.html" %}
+{% extends "feed/base.html" %}
+{% load static %}
 
 {% block content %}
-    {% if reg_form.errors %}
-    <p>{{ reg_form.errors }}</p>
-    {% endif %}
-    <form method="post">
-        {% csrf_token %}
-        <table>
-            <tr>
-                <td>{{ reg_form.username.label_tag }}</td>
-                <td>{{ reg_form.username }}</td>
-            </tr>
-            <tr>
-                <td>{{ reg_form.email.label_tag }}</td>
-                <td>{{ reg_form.email }}</td>
-            </tr>
-            <tr>
-                <td>{{ reg_form.password1.label_tag }}</td>
-                <td>{{ reg_form.password1 }}</td>
-            </tr>
-            <tr>
-                <td>{{ reg_form.password2.label_tag }}</td>
-                <td>{{ reg_form.password2 }}</td>
-            </tr>
-        </table>
-        <input type="submit" class="btn btn-primary" value="login">
-    </form>
+<div class="row">
+    <div class="col"></div>
+    <div class="col-6">
+        <div class="mt-3 mb-3">
+            <img src="{% static "img/logo-full.png" %}" id="login--img-full-logo">
+        </div>
+        {% if reg_form.errors %}
+            <div class="alert alert-danger">
+                {{ error_message }}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'account.register' %}" id="form-register">
+            {% csrf_token %}
+            <table id="table-register">
+                <tr>
+                    <td class="table-register--label">Username</td>
+                    <td class="table-register--input-text" id="table-register--text-username">{{ reg_form.username }}</td>
+                </tr>
+                <tr>
+                    <td class="table-register--label">Email</td>
+                    <td class="table-register--input-text" id="table-register--text-email">{{ reg_form.email }}</td>
+                </tr>
+                <tr>
+                    <td class="table-register--label">Password</td>
+                    <td class="table-register--input-text" id="table-register--text-password">{{ reg_form.password1 }}</td>
+                </tr>
+                <tr>
+                    <td class="table-register--label">Repeat Password</td>
+                    <td class="table-register--input-text">{{ reg_form.password2 }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="pt-2 w-100">
+                        <input type="submit" value="Register" class="w-100 btn btn-primary" id="table-register--btn-register">
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" name="next" value="{{ next }}">
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
 {% endblock %}

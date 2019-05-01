@@ -1,41 +1,66 @@
-{% extends "accounts/base.html" %}
+{% extends "feed/base.html" %}
+{% load static %}
 
 {% block content %}
+<div class="row">
+    <div class="col"></div>
+    <div class="col-6">
+        <div class="mt-3 mb-3">
+            <img src="{% static "img/logo-full.png" %}" id="login--img-full-logo">
+        </div>
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                Your username and password didn't match. Please try again.
+            </div>
+        {% elif next %}
+            <div class="alert alert-warning">
+                {% if user.is_authenticated %}
+                    Your account doesn't have access to this page.<br>To proceed,
+                    please login with an account that has access.
+                {% else %}
+                    Please login to see this page.
+                {% endif %}
+            </div>
+        {% endif %}
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
-
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-    {% else %}
-    <p>Please login to see this page.</p>
-    {% endif %}
-{% endif %}
-
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
-
-<input type="submit" value="login" class="btn btn-primary">
-<input type="hidden" name="next" value="{{ next }}">
-</form>
-
-{# Assumes you setup the password_reset view in your URLconf #}
-<p>
-    <a href="{% url 'password_reset' %}">Lost password?</a>
-    <a href="{% url 'account.register' %}">Register?</a>
-</p>
-
+        <form method="post" action="{% url 'login' %}" id="form-login">
+            {% csrf_token %}
+            <table id="table-login">
+                <tr>
+                    <td class="table-login--label">Username</td>
+                    <td id="table-login--text-username">{{ form.username }}</td>
+                </tr>
+                <tr>
+                    <td class="table-login--label">Password</td>
+                    <td id="table-login--text-password">{{ form.password }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="w-100">
+                        <input type="submit" value="Login" class="w-100 btn btn-primary" id="table-login--btn-login">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="w-100">
+                        <button class="w-100 btn btn-danger" id="table-login--btn-register">Register</button>
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" name="next" value="{{ next }}">
+            {# Assumes you setup the password_reset view in your URLconf #}
+            <p class="text-center mt-1">
+                <a href="{% url 'password_reset' %}">Lost Password?</a>
+            </p>
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+      $('#table-login--btn-register').on('submit click', function(e) {
+        e.preventDefault();
+        window.location.href = '{% url 'account.register' %}';
+        return false;
+      });
+    })
+</script>
 {% endblock %}

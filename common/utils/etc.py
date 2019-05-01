@@ -1,4 +1,5 @@
 import re
+import socket
 from datetime import datetime
 
 from dateutil.tz import tzutc
@@ -76,9 +77,14 @@ def extract_hashtags(text):
     return set(re.findall(r"#(\w+)", text))
 
 
+def is_local():
+    """Check whether it is local PC or not."""
+    return 'sinwoo' in socket.gethostname()
+
+
 def get_current_host_url():
     """Get the host url based on the current server status"""
-    if settings.DEBUG:
+    if settings.DEBUG or is_local():
         return 'http://jaypark.sinwoobang.me:8000'
     return 'http://jaypark.sinwoobang.me'
 

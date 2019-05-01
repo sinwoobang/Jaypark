@@ -201,6 +201,7 @@ AWS_STORAGE_BUCKET_NAME = 'jaypark'
 AWS_REGION = 'ap-northeast-2'
 AWS_S3_HOST = 's3.%s.amazonaws.com' % AWS_REGION
 AWS_DEFAULT_ACL = 'public-read'
+AWS_S3_CUSTOM_DOMAIN = 'd2xnludi9sh0zl.cloudfront.net'
 
 credential = boto3.session.Session(profile_name='jaypark').get_credentials()
 AWS_ACCESS_KEY_ID = credential.access_key

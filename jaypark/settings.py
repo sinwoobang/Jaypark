@@ -30,7 +30,7 @@ def _is_local():
     return 'sinwoo' in socket.gethostname()
 
 
-TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+TESTING = (len(sys.argv) > 1 and sys.argv[1] == 'test') or os.environ.get('TRAVIS') == 'true'
 DEBUG = _is_local() and not TESTING
 
 

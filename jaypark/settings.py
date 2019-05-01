@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import socket
 import sys
 
 import boto3
@@ -25,7 +26,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+def _is_local():
+    return 'sinwoo' in socket.gethostname()
+
+
+DEBUG = False
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -95,7 +100,7 @@ if TESTING:
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-elif DEBUG:
+elif DEBUG or _is_local():
     from jaypark.password import DEBUG_DATABASE
     DATABASES = DEBUG_DATABASE
 else:

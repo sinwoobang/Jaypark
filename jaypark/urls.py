@@ -17,6 +17,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
+from common.views import handle_not_fonud
 
 urlpatterns = [
     path('', RedirectView.as_view(url=settings.MAIN_REDIRECT_URL)),  # To redirect to the main feed
@@ -26,3 +27,5 @@ urlpatterns = [
     path('post/', include('post.urls')),
     path('<username>/', RedirectView.as_view(pattern_name='feed.user')),  # To redirect to a user's feed. Keep it as the last view to prevent to conflict with the other views.
 ]
+
+handler404 = handle_not_fonud

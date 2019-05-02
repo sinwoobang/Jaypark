@@ -106,7 +106,8 @@ elif DEBUG or _is_local():
     from jaypark.password import DEBUG_DATABASE
     DATABASES = DEBUG_DATABASE
 else:
-    DATABASES['default'] = {}
+    from jaypark.password import PRODUCT_DATABASE
+    DATABASES = PRODUCT_DATABASE
 
 
 # Graph

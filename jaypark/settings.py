@@ -110,11 +110,16 @@ else:
 
 
 # Graph
-config.DATABASE_URL = 'bolt://jaypark:jay@graph@localhost:7687'  # default
 if DEBUG:
     os.environ['NEOMODEL_CYPHER_DEBUG'] = '1'
+
 if TESTING:  # for CI or Test
     config.DATABASE_URL = 'bolt://jayparktest:jay@graphtest@localhost:7687'
+elif DEBUG or _is_local():  # for Dev
+    config.DATABASE_URL = 'bolt://jaypark:jay@graph@localhost:7687'  # default
+else:  # for Production
+    from jaypark.password import PRODUCT_GRAPH
+    config.DATABASE_URL = PRODUCT_GRAPH
 
 
 # Password validation

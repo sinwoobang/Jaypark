@@ -17,10 +17,11 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
-from common.views import handle_not_fonud
+from common.views import handle_not_fonud, health
 
 urlpatterns = [
     path('', RedirectView.as_view(url=settings.MAIN_REDIRECT_URL)),  # To redirect to the main feed
+    path('health/', health),
     path('admin/', admin.site.urls),
     path('feed/', include('feed.urls')),
     path('accounts/', include('accounts.urls')),

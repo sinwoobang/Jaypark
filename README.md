@@ -28,6 +28,21 @@ Step 3. Runserver
 $ python manage.py runserver
 
 ```
+<img src="https://d2xnludi9sh0zl.cloudfront.net/photo/profile/f19a02702d344730b39bd350ac04d237">
+
+Run Test Code
+```bash
+$ coverage run --source='.' manage.py test
+
+```
+<img src="https://d2xnludi9sh0zl.cloudfront.net/photo/profile/aeffd787e54445d8a44aef8a083b580d">
+
+Check Test Coverage
+```bash
+$ coverage report
+
+```
+<img src="https://d2xnludi9sh0zl.cloudfront.net/photo/profile/432f264d60fe4e5885fe007995c68825">
 
 ### Contribution Guide
 * **Coding Convention**: Jaypark follows [PEP 8 Style Guide](https://www.python.org/dev/peps/pep-0008/). Please be careful about it.

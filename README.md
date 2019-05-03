@@ -1,4 +1,4 @@
-# Jaypark [![Build Status](https://travis-ci.com/sinwoobang/Jaypark.svg?token=s64m3rayQnZ6TWPqxtrG&branch=master)](https://travis-ci.com/sinwoobang/jaypark)
+# Jaypark [![Build Status](https://travis-ci.com/sinwoobang/Jaypark.svg?token=s64m3rayQnZ6TWPqxtrG&branch=master)](https://travis-ci.com/sinwoobang/Jaypark)
 Twitter-like service powered by Django and Graph Database
 
 ### Neo4j: Graphs for Everyone

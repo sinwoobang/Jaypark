@@ -7,7 +7,39 @@ Twitter-like service powered by Django and Graph Database
 Jaypark uses Graph Database to implement Social Network.<br>
 [Neo4j](https://github.com/neo4j/neo4j), the main graph database supports various built-in features.
 
+### Getting Started
+Step 0. Install [MySQL 5.7](https://dev.mysql.com/downloads/windows/installer/5.7.html) and [Neo4j](https://neo4j.com/download-center/).
+
+Step 1. Download Backend Dependencies
+```bash
+$ pip install -r requirements/dev.txt
+
+```
+
+
+Step 2. Download Frontend Dependencies
+```bash
+$ bower install
+
+```
+
+Step 3. Runserver
+```bash
+$ python manage.py runserver
+
+```
+
+### Contribution Guide
+* **Coding Convention**: Jaypark follows [PEP 8 Style Guide](https://www.python.org/dev/peps/pep-0008/). Please be careful about it.
+
+* **Backend Dependency**: Backend Dependencies are fully listed on the folder `requirements`. You have to add a library to the list if you inject it into the code.
+
+* **Frontend Dependency**: Frontend Dependencies are fully listed on `bower.json`. You have to add a library to the list if you inject it into the code.
+
+* **Test Code**: You have to add test code if you code something, or Travis CI would raise an error. Test Code is located on test.py of each package.
+
 ### What does Jaypark mean?
 [Jay Park](https://rocnation.com/jay-park/) is the first Asian singer to sign with [Roc Nation](https://rocnation.com/).<br>
 I hope to be a person like him through this project.
 <br><img src="https://www.allkpop.com/upload/2018/05/af_org/28173717/Jay-Park.jpg" width="500">
+

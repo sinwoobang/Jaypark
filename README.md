@@ -54,7 +54,6 @@ $ coverage report
 * **Test Code**: You have to add test code if you code something, or Travis CI would raise an error. Test Code is located on test.py of each package.
 
 ### What does Jaypark mean?
-[Jay Park](https://rocnation.com/jay-park/) is the first Asian singer to sign with [Roc Nation](https://rocnation.com/).<br>
-I hope to be a person like him through this project.
+[Jay Park](https://rocnation.com/jay-park/) is my favorite artist and the first Asian singer to sign with [Roc Nation](https://rocnation.com/).<br>
 <br><img src="https://www.allkpop.com/upload/2018/05/af_org/28173717/Jay-Park.jpg" width="500">
 

@@ -10,7 +10,7 @@ sqlparse==0.3.0
 coverage==4.5.3
 django-storages==1.7.1
 boto3==1.9.130
-Pillow==6.0.0
+Pillow==6.2.0
 mysqlclient==1.4.2.post1
 gunicorn==19.9.0
 supervisor==4.0.2
